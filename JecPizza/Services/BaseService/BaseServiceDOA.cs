@@ -6,7 +6,7 @@ namespace JecPizza.Services.BaseService
     internal  abstract class BaseServiceDOA: IDisposable
     {
         private static readonly string _DBConn = Properties.Settings.Default.Db;
-        private SqlConnection _Connection = new SqlConnection(_DBConn);
+        private readonly SqlConnection _Connection = new SqlConnection(_DBConn);
 
         public void Dispose()
         {

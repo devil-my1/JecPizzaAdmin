@@ -4,10 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <StartupObject>JecPizza.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Infostructure\" />
     <Folder Include="Services\BaseService\" />
     <Folder Include="ViewModels\Base\" />
   </ItemGroup>
@@ -19,11 +19,29 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="LocalizatorHelper">
+      <HintPath>bin\Debug\netcoreapp3.1\LocalizatorHelper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Content\Languages\Language.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Language.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Content\Languages\Language.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Language.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
