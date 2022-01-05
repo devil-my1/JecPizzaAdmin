@@ -10,5 +10,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=DESKTOP-H30SSBK\MSSQLSERVER01;Initial Catalog=JecPizzaDb;Integrated Security=True</Value>
     </Setting>
+    <Setting Name="Language" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en-US</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

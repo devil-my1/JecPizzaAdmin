@@ -2,19 +2,581 @@
     x:Class="JecPizza.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:convertets="clr-namespace:JecPizza.Infostructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="{Binding Title}"
-    Width="800"
-    Height="450"
+    Title="{Binding Source={StaticResource langHelper}, Path=[lang.Title]}"
+    Width="1200"
+    Height="800"
     DataContext="{Binding MainWindowVm, Source={StaticResource Locator}}"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+
+    <Window.Resources>
+        <convertets:ImageConverter x:Key="imageCon" />
+
+        <Style
+            x:Key="tabItem"
+            BasedOn="{StaticResource MaterialDesignNavigationRailTabItem}"
+            TargetType="{x:Type TabItem}">
+            <Style.Triggers>
+                <Trigger Property="TabItem.IsSelected" Value="True">
+                    <Setter Property="TabItem.Foreground" Value="{StaticResource SecondaryHueMidBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+
     <Grid>
-        <StackPanel>
-            <materialDesign:Card Margin="10,20,30,8" Padding="32">
-                <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}">My First Material Design App</TextBlock>
-            </materialDesign:Card>
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu
+            Grid.Row="0"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsMainMenu="True">
+            <MenuItem
+                Height="auto"
+                Padding="16,4"
+                Header="{Binding Source={StaticResource langHelper}, Path=[lang.File]}">
+                <MenuItem Margin="2" Header="{Binding Source={StaticResource langHelper}, Path=[lang.Open]}" />
+                <Separator />
+                <MenuItem
+                    Margin="2"
+                    Command="{Binding CloseWindowCommand}"
+                    Header="{Binding Source={StaticResource langHelper}, Path=[lang.Exit]}" />
+            </MenuItem>
+            <MenuItem
+                Height="auto"
+                Padding="16,4"
+                Header="{Binding Source={StaticResource langHelper}, Path=[lang.Settings]}">
+                <MenuItem
+                    Height="auto"
+                    Padding="16,4"
+                    Header="{Binding Source={StaticResource langHelper}, Path=[lang.Lang]}">
+                    <MenuItem
+                        Height="20"
+                        Margin="5"
+                        Command="{Binding ChangeLanguageCommand}"
+                        CommandParameter="ru-RU"
+                        Header="{Binding Source={StaticResource langHelper}, Path=[lang.Russian]}" />
+                    <MenuItem
+                        Height="20"
+                        Margin="5"
+                        Command="{Binding ChangeLanguageCommand}"
+                        CommandParameter="en-US"
+                        Header="{Binding Source={StaticResource langHelper}, Path=[lang.English]}" />
+                    <MenuItem
+                        Height="20"
+                        Margin="5"
+                        Command="{Binding ChangeLanguageCommand}"
+                        CommandParameter="ja-JP"
+                        Header="{Binding Source={StaticResource langHelper}, Path=[lang.Japanese]}" />
+                </MenuItem>
+            </MenuItem>
+            <MenuItem
+                Height="auto"
+                Padding="16,4"
+                Header="{Binding Source={StaticResource langHelper}, Path=[lang.About]}" />
+        </Menu>
+
+        <TabControl
+            Grid.Row="1"
+            VerticalContentAlignment="Center"
+            materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+            Style="{StaticResource MaterialDesignNavigatilRailTabControl}">
+            <TabControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </TabControl.ItemsPanel>
+            <TabItem
+                Width="120"
+                Height="auto"
+                IsSelected="True"
+                Style="{StaticResource tabItem}">
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="32"
+                            Height="32"
+                            HorizontalAlignment="Center"
+                            FontWeight="ExtraBold"
+                            Kind="MonitorDashboard" />
+                        <TextBlock
+                            Margin="15"
+                            Text="{Binding Source={StaticResource langHelper}, Path=[lang.Dash]}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+            <TabItem
+                Width="120"
+                Height="auto"
+                Style="{StaticResource tabItem}">
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="32"
+                            Height="32"
+                            HorizontalAlignment="Center"
+                            Kind="PackageDown" />
+                        <TextBlock
+                            Margin="15"
+                            Text="{Binding Source={StaticResource langHelper}, Path=[lang.AddProduct]}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </TabItem.Header>
+                <!--<ListView Width="auto" ItemsSource="{Binding GoodsTable}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding GoodsId}" Header="Goods ID" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Goods Name" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Price" />
+                            <GridViewColumn DisplayMemberBinding="{Binding GoodsGroupId}" Header="GoodsGroupID" />
+                            <GridViewColumn DisplayMemberBinding="{Binding IsRecommend}" Header="IsRecommended" />
+                            <GridViewColumn DisplayMemberBinding="{Binding IsNew}" Header="IsNew" />
+                            <GridViewColumn DisplayMemberBinding="{Binding HasTopping}" Header="HasTopping" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Image}" Header="Image">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>-->
+                <!--<DataGrid
+                    AreRowDetailsFrozen="True"
+                    AutoGenerateColumns="False"
+                    CanUserSortColumns="True"
+                    DataContext="{Binding GoodsTable}"
+                    GridLinesVisibility="All"
+                    IsReadOnly="False"
+                    ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window, AncestorLevel=1}, Path=DataContext.GoodsTable}">
+
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="GOODS ID">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                        <materialDesign:PackIcon Margin="5,0,5,5" Kind="MusicNoteWhole" />
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Path=GoodsId}"
+                                            TextAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="NAME" />
+                        <DataGridTextColumn Binding="{Binding Price, StringFormat=0円}" Header="PRICE" />
+                        <DataGridCheckBoxColumn Binding="{Binding IsRecommend}" Header="RECOMMENDED" />
+                        <DataGridCheckBoxColumn Binding="{Binding IsNew}" Header="NEW" />
+                        <DataGridCheckBoxColumn Binding="{Binding HasTopping}" Header="HAS TOPPING" />
+                        <DataGridTemplateColumn Header="IMAGE">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image
+                                        Width="75"
+                                        Height="75"
+                                        Source="{Binding Converter={StaticResource imageCon}, Path=Image}"
+                                        Stretch="Fill" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>-->
+
+
+                <materialDesign:DialogHost
+                    CloseOnClickAway="True"
+                    DialogContent="{Binding DialogContent, UpdateSourceTrigger=PropertyChanged}"
+                    Identifier="rootHost"
+                    IsOpen="{Binding IsDialogOpen}"
+                    OverlayBackground="{StaticResource PrimaryHueDarkBrush}">
+
+                    <DockPanel LastChildFill="True" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+
+                        <materialDesign:ColorZone
+                            Padding="16"
+                            DockPanel.Dock="Top"
+                            Mode="SecondaryDark">
+                            <DockPanel>
+                                <Button
+                                    VerticalAlignment="Center"
+                                    Command="{Binding AddNewGoodsCommand}"
+                                    DockPanel.Dock="Right"
+                                    Style="{DynamicResource MaterialDesignIconButton}">
+                                    <materialDesign:PackIcon
+                                        Width="35"
+                                        Height="35"
+                                        Kind="Add" />
+                                </Button>
+                                <StackPanel
+                                    VerticalAlignment="Center"
+                                    materialDesign:RippleAssist.IsCentered="True"
+                                    Orientation="Horizontal">
+
+                                    <materialDesign:ColorZone
+                                        Margin="16,0,0,0"
+                                        Padding="8,4,8,4"
+                                        VerticalAlignment="Center"
+                                        Panel.ZIndex="1"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                        CornerRadius="2"
+                                        Mode="Standard">
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Button Style="{DynamicResource MaterialDesignToolButton}">
+                                                <materialDesign:PackIcon Kind="Search" Opacity=".56" />
+                                            </Button>
+                                            <TextBox
+                                                Grid.Column="1"
+                                                MinWidth="200"
+                                                Margin="8,0,0,0"
+                                                VerticalAlignment="Center"
+                                                materialDesign:HintAssist.Hint="{Binding Source={StaticResource langHelper}, Path=[lang.Search]}"
+                                                materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                                BorderThickness="0"
+                                                Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Button Grid.Column="2" Style="{DynamicResource MaterialDesignToolButton}">
+                                                <materialDesign:PackIcon
+                                                    Margin="8,0,0,0"
+                                                    Kind="Microphone"
+                                                    Opacity=".56" />
+                                            </Button>
+                                        </Grid>
+                                    </materialDesign:ColorZone>
+                                    <materialDesign:PopupBox StaysOpen="True">
+                                        <StackPanel
+                                            Width="auto"
+                                            Height="auto"
+                                            Margin="8">
+                                            <TextBlock
+                                                FontSize="18"
+                                                Text="Filter Sort Options:"
+                                                TextAlignment="Center" />
+                                            <RadioButton
+                                                Content="Price Option"
+                                                FontSize="15"
+                                                GroupName="FilterOption"
+                                                Tag="Price">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="Checked">
+                                                        <b:EventTrigger.Actions>
+                                                            <b:InvokeCommandAction Command="{Binding CheckedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type RadioButton}}, Path=Tag}" />
+                                                        </b:EventTrigger.Actions>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </RadioButton>
+                                            <RadioButton
+                                                Content="Name Option"
+                                                FontSize="15"
+                                                GroupName="FilterOption"
+                                                Tag="Name">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="Checked">
+                                                        <b:EventTrigger.Actions>
+                                                            <b:InvokeCommandAction Command="{Binding CheckedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type RadioButton}}, Path=Tag}" />
+                                                        </b:EventTrigger.Actions>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </RadioButton>
+                                            <RadioButton
+                                                Content="Is Recommended Option"
+                                                FontSize="15"
+                                                GroupName="FilterOption"
+                                                Tag="IsRecommended">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="Checked">
+                                                        <b:EventTrigger.Actions>
+                                                            <b:InvokeCommandAction Command="{Binding CheckedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type RadioButton}}, Path=Tag}" />
+                                                        </b:EventTrigger.Actions>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </RadioButton>
+                                            <RadioButton
+                                                Content="Is New Option"
+                                                FontSize="15"
+                                                GroupName="FilterOption"
+                                                Tag="IsNew">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="Checked">
+                                                        <b:EventTrigger.Actions>
+                                                            <b:InvokeCommandAction Command="{Binding CheckedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type RadioButton}}, Path=Tag}" />
+                                                        </b:EventTrigger.Actions>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </RadioButton>
+                                            <RadioButton
+                                                Content="Has Topping Option"
+                                                FontSize="15"
+                                                GroupName="FilterOption"
+                                                Tag="HasTopping">
+                                                <b:Interaction.Triggers>
+                                                    <b:EventTrigger EventName="Checked">
+                                                        <b:EventTrigger.Actions>
+                                                            <b:InvokeCommandAction Command="{Binding CheckedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorLevel=1, AncestorType={x:Type RadioButton}}, Path=Tag}" />
+                                                        </b:EventTrigger.Actions>
+                                                    </b:EventTrigger>
+                                                </b:Interaction.Triggers>
+                                            </RadioButton>
+
+                                            <StackPanel
+                                                Margin="0,20"
+                                                HorizontalAlignment="Center"
+                                                Orientation="Horizontal">
+
+                                                <Button
+                                                    VerticalAlignment="Center"
+                                                    Command="{Binding SortCommand}"
+                                                    Content="_Filter"
+                                                    FontSize="16" />
+                                                <Button
+                                                    VerticalAlignment="Center"
+                                                    Command="{x:Static materialDesign:PopupBox.ClosePopupCommand}"
+                                                    Content="{Binding Source={StaticResource langHelper}, Path=[lang.Cancel]}"
+                                                    FontSize="16"
+                                                    Foreground="Red" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </materialDesign:PopupBox>
+                                </StackPanel>
+                            </DockPanel>
+                        </materialDesign:ColorZone>
+
+                        <ListBox
+                            Name="gBox"
+                            Margin="20"
+                            materialDesign:RippleAssist.IsDisabled="True"
+                            ItemsSource="{Binding GoodsCollection}"
+                            ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                            SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
+                            SelectedItem="{Binding CurrentSelectedGoods, Mode=TwoWay}"
+                            SelectionMode="Single">
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding OpenEditGoodsCommand}" Header="{Binding Source={StaticResource langHelper}, Path=[lang.Edit]}" />
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="SelectionChanged">
+                                    <b:EventTrigger.Actions>
+                                        <b:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=gBox}" />
+                                    </b:EventTrigger.Actions>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <materialDesign:Card
+                                        Margin="10,10,10,10"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                        UniformCornerRadius="10">
+                                        <StackPanel>
+                                            <Border CornerRadius="10" SnapsToDevicePixels="True">
+                                                <Image
+                                                    Width="220"
+                                                    Height="145"
+                                                    ClipToBounds="True"
+                                                    Source="{Binding Image, Converter={StaticResource imageCon}}"
+                                                    Stretch="Fill" />
+                                            </Border>
+                                            <Separator Margin="0,10" />
+                                            <TextBlock
+                                                FontFamily="Bernard MT Condensed"
+                                                FontSize="20"
+                                                FontWeight="Black"
+                                                Text="{Binding Name}"
+                                                TextAlignment="Center"
+                                                TextWrapping="Wrap" />
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    DockPanel.Dock="Left"
+                                                    FontSize="15"
+                                                    Text="Is Recommended : " />
+                                                <CheckBox
+                                                    Margin="0,0,5,0"
+                                                    DockPanel.Dock="Right"
+                                                    IsChecked="{Binding IsRecommend}"
+                                                    IsEnabled="False"
+                                                    IsManipulationEnabled="False" />
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    DockPanel.Dock="Left"
+                                                    FontSize="15"
+                                                    Text="Is New : " />
+                                                <CheckBox
+                                                    Margin="0,0,5,0"
+                                                    DockPanel.Dock="Right"
+                                                    IsChecked="{Binding IsNew}"
+                                                    IsEnabled="False" />
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock
+                                                    Margin="10,0,0,0"
+                                                    DockPanel.Dock="Left"
+                                                    FontSize="15"
+                                                    Text="Has Topping : " />
+                                                <CheckBox
+                                                    Margin="0,0,5,0"
+                                                    DockPanel.Dock="Right"
+                                                    IsChecked="{Binding HasTopping}"
+                                                    IsEnabled="False" />
+                                            </DockPanel>
+                                            <TextBlock
+                                                Margin="0,10"
+                                                FontFamily="Copperplate Gothic Bold"
+                                                FontSize="20"
+                                                FontWeight="Bold"
+                                                Text="{Binding Price, StringFormat=0円}"
+                                                TextAlignment="Center" />
+                                            <Grid Margin="0,15" materialDesign:RippleAssist.IsDisabled="false">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Button
+                                                    Grid.Column="0"
+                                                    Margin="3"
+                                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.OpenEditGoodsCommand}"
+                                                    ToolTip="{Binding Source={StaticResource langHelper}, Path=[lang.Edit]}">
+                                                    <Button.Style>
+                                                        <Style BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}" TargetType="{x:Type Button}">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Foreground" Value="{StaticResource SecondaryHueMidBrush}" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Button.Content>
+                                                        <materialDesign:PackIcon
+                                                            Name="updateIcon"
+                                                            Width="25"
+                                                            Height="25"
+                                                            Kind="Update" />
+                                                    </Button.Content>
+                                                </Button>
+                                                <Button
+                                                    Grid.Column="1"
+                                                    Margin="3"
+                                                    ToolTip="{Binding Source={StaticResource langHelper}, Path=[lang.Delete]}">
+                                                    <Button.Style>
+                                                        <Style BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}" TargetType="{x:Type Button}">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Foreground" Value="DarkRed" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                    <Button.Content>
+                                                        <materialDesign:PackIcon
+                                                            Name="deleteIcon"
+                                                            Width="25"
+                                                            Height="25"
+                                                            Kind="Delete" />
+                                                    </Button.Content>
+                                                </Button>
+                                            </Grid>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+
+
+                </materialDesign:DialogHost>
+
+            </TabItem>
+            <TabItem
+                Width="120"
+                Height="auto"
+                Style="{StaticResource tabItem}">
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="32"
+                            Height="32"
+                            HorizontalAlignment="Center"
+                            Kind="CalendarTextOutline" />
+                        <TextBlock
+                            Margin="15"
+                            Text="{Binding Source={StaticResource langHelper}, Path=[lang.Reservation]}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </TabItem.Header>
+
+            </TabItem>
+            <TabItem
+                Width="120"
+                Height="auto"
+                Style="{StaticResource tabItem}">
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="32"
+                            Height="32"
+                            HorizontalAlignment="Center"
+                            Kind="TruckDelivery" />
+                        <TextBlock
+                            Margin="15"
+                            Text="{Binding Source={StaticResource langHelper}, Path=[lang.Delivery]}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+            <TabItem
+                Width="120"
+                Height="auto"
+                VerticalAlignment="Bottom"
+                Style="{StaticResource tabItem}">
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="32"
+                            Height="32"
+                            HorizontalAlignment="Center"
+                            Kind="AccountCircle" />
+                        <TextBlock
+                            Margin="15"
+                            Text="{Binding Source={StaticResource langHelper}, Path=[lang.Account]}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </TabItem.Header>
+
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>

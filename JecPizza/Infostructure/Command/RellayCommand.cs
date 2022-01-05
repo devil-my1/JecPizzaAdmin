@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 using JecPizza.Infostructure.Command.Base;
 
 namespace JecPizza.Infostructure.Command
@@ -12,9 +13,15 @@ namespace JecPizza.Infostructure.Command
         {
             this._execute = _execute ?? throw new ArgumentNullException(nameof(_execute));
             this._canExecute = _canExecute;
+
         }
 
         public RellayCommand(Action<object> _execute) : this(_execute, null) { }
+
+
+
+
+
 
 
         public override bool CanExecute(object parameter) => _canExecute?.Invoke(parameter) ?? true;

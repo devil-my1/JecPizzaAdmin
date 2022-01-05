@@ -1,0 +1,141 @@
+﻿<UserControl
+    x:Class="JecPizza.Views.Dialogs.GoodsEditDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:validation="clr-namespace:JecPizza.Infostructure.Validation"
+    Width="500"
+    Height="auto"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel>
+            <Border
+                Margin="10"
+                CornerRadius="10"
+                SnapsToDevicePixels="True">
+                <Image
+                    Width="auto"
+                    Height="205"
+                    ClipToBounds="True"
+                    Cursor="Hand"
+                    Source="{Binding Image}"
+                    Stretch="Fill">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:EventTrigger.Actions>
+                                <i:InvokeCommandAction Command="{Binding ChangeImageCommand}" />
+                            </i:EventTrigger.Actions>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
+            </Border>
+            <DockPanel Margin="10,20,10,10" LastChildFill="False">
+                <TextBlock
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left"
+                    FontSize="20"
+                    Text="ID" />
+                <TextBlock
+                    Margin="20,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="24"
+                    FontWeight="ExtraBold"
+                    Text="{Binding CurrentGoods.GoodsId}" />
+            </DockPanel>
+            <TextBox
+                Margin="10"
+                materialDesign:HintAssist.Hint="{Binding [lang.GName], Source={StaticResource langHelper}}"
+                FontSize="24"
+                Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Binding Path="CurrentGoods.Name" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <validation:NotEmptyValidationcs ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox>
+            <TextBox
+                Margin="10"
+                materialDesign:HintAssist.Hint="{Binding [lang.Price], Source={StaticResource langHelper}}"
+                FontSize="24"
+                Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Binding Path="CurrentGoods.Price" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <validation:NotEmptyValidationcs ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox>
+            <TextBox
+                Margin="10"
+                materialDesign:HintAssist.Hint="{Binding [lang.GoodsGrId], Source={StaticResource langHelper}}"
+                FontSize="24"
+                Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Binding Path="CurrentGoods.GoodsGroupId" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <validation:NotEmptyValidationcs ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox>
+            <DockPanel Margin="10,20,10,10" LastChildFill="False">
+                <TextBlock
+                    Margin="10,0,0,0"
+                    DockPanel.Dock="Left"
+                    FontSize="18"
+                    Text="{Binding Source={StaticResource langHelper}, Path=[lang.Rec]}" />
+                <CheckBox
+                    Margin="0,0,5,0"
+                    DockPanel.Dock="Right"
+                    IsChecked="{Binding CurrentGoods.IsRecommend}" />
+            </DockPanel>
+            <DockPanel Margin="10" LastChildFill="False">
+                <TextBlock
+                    Margin="10,0,0,0"
+                    DockPanel.Dock="Left"
+                    FontSize="18"
+                    Text="{Binding Source={StaticResource langHelper}, Path=[lang.New]}" />
+                <CheckBox
+                    Margin="0,0,5,0"
+                    DockPanel.Dock="Right"
+                    IsChecked="{Binding CurrentGoods.IsNew}" />
+            </DockPanel>
+            <DockPanel Margin="10" LastChildFill="False">
+                <TextBlock
+                    Margin="10,0,0,0"
+                    DockPanel.Dock="Left"
+                    FontSize="18"
+                    Text="{Binding Source={StaticResource langHelper}, Path=[lang.Topping]}" />
+                <CheckBox
+                    Margin="0,0,5,0"
+                    DockPanel.Dock="Right"
+                    IsChecked="{Binding CurrentGoods.HasTopping}" />
+            </DockPanel>
+            <StackPanel
+                Margin="30"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Margin="5,0,5,0"
+                    materialDesign:RippleAssist.RippleSizeMultiplier="0.5"
+                    Command="{Binding ChangeCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=.}"
+                    Content="{Binding [lang.Change], Source={StaticResource langHelper}}"
+                    Foreground="{StaticResource PrimaryHueDarkBrush}"
+                    Style="{StaticResource MaterialDesignToolButton}" />
+
+                <Button
+                    Margin="5,0,5,0"
+                    materialDesign:RippleAssist.RippleSizeMultiplier="0.5"
+                    Command="materialDesign:DialogHost.CloseDialogCommand"
+                    Content="{Binding [lang.Cancel], Source={StaticResource langHelper}}"
+                    Style="{StaticResource MaterialDesignToolButton}">
+                    <Button.CommandParameter>
+                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">False</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

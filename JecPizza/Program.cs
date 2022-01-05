@@ -11,7 +11,15 @@ namespace JecPizza
         {
             var app = new App();
             app.InitializeComponent();
-            app.Run();
+            try
+            {
+                app.Run();
+
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show(e.Message);
+            }
         }
 
         public static IHostBuilder GetHostBuilder(string[] args) =>

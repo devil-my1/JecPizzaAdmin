@@ -117,82 +117,121 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="About" xml:space="preserve">
+    <value>ソフトについて</value>
+  </data>
   <data name="Accept" xml:space="preserve">
-    <value>Accept</value>
+    <value>確定</value>
   </data>
   <data name="Account" xml:space="preserve">
-    <value>Account</value>
+    <value>アカウント</value>
+  </data>
+  <data name="AddGoods" xml:space="preserve">
+    <value>商品追加</value>
+  </data>
+  <data name="AddProduct" xml:space="preserve">
+    <value>商品管理</value>
   </data>
   <data name="AddRes" xml:space="preserve">
-    <value>New Reservation</value>
+    <value>予約する</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>キャンセル</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>更新</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>_閉じる</value>
+  </data>
+  <data name="Dash" xml:space="preserve">
+    <value>ダッシュボード</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Date and Time</value>
+    <value>日にち</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>削除</value>
   </data>
   <data name="Delivery" xml:space="preserve">
-    <value>Delivery</value>
-  </data>
-  <data name="Drink" xml:space="preserve">
-    <value>Drink Menu</value>
+    <value>配達管理</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>編集</value>
   </data>
-  <data name="Eng" xml:space="preserve">
-    <value>English</value>
+  <data name="English" xml:space="preserve">
+    <value>_英語</value>
+  </data>
+  <data name="ErEdit" xml:space="preserve">
+    <value>編集失敗!</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>_閉じる</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>_ファイル</value>
   </data>
   <data name="Food" xml:space="preserve">
-    <value>Food Menu</value>
+    <value>フードメニュー</value>
   </data>
-  <data name="Friedns" xml:space="preserve">
-    <value>Friedns</value>
+  <data name="GName" xml:space="preserve">
+    <value>商品名</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
+  <data name="GoodsGrId" xml:space="preserve">
+    <value>商品グループID</value>
   </data>
-  <data name="Info" xml:space="preserve">
-    <value>Info</value>
+  <data name="Japanese" xml:space="preserve">
+    <value>_日本語</value>
   </data>
-  <data name="Japan" xml:space="preserve">
-    <value>Japanese</value>
-  </data>
-  <data name="Languages" xml:space="preserve">
-    <value>Languages</value>
-  </data>
-  <data name="Messenger" xml:space="preserve">
-    <value>Messenger</value>
+  <data name="Lang" xml:space="preserve">
+    <value>_言語</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>名前</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>新商品</value>
   </data>
   <data name="Notif" xml:space="preserve">
-    <value>Notification</value>
+    <value>お知らせ</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>_ファイルを開く</value>
   </data>
   <data name="People" xml:space="preserve">
-    <value>People</value>
+    <value>人数</value>
   </data>
   <data name="PhoneN" xml:space="preserve">
-    <value>Phone Number</value>
+    <value>電話番号</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>価格</value>
+  </data>
+  <data name="Rec" xml:space="preserve">
+    <value>おすすめ品</value>
   </data>
   <data name="Reservation" xml:space="preserve">
-    <value>Reservation</value>
+    <value>予約管理</value>
   </data>
-  <data name="Russ" xml:space="preserve">
-    <value>Russian</value>
+  <data name="Russian" xml:space="preserve">
+    <value>_ロシア語</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>検索</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>_設定</value>
+  </data>
+  <data name="SucEdit" xml:space="preserve">
+    <value>編集成功!</value>
   </data>
   <data name="Surname" xml:space="preserve">
-    <value>Surname</value>
+    <value>名字</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>JecPizzaAdministrator</value>
+    <value>JecPizzaアドミニストレータ</value>
+  </data>
+  <data name="Topping" xml:space="preserve">
+    <value>トッピング有無</value>
   </data>
 </root>

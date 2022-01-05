@@ -3,14 +3,15 @@ using System.Data.SqlClient;
 
 namespace JecPizza.Services.BaseService
 {
-    internal  abstract class BaseServiceDOA: IDisposable
+    public abstract class BaseServiceDOA : IDisposable
     {
-        private static readonly string _DBConn = Properties.Settings.Default.Db;
-        private readonly SqlConnection _Connection = new SqlConnection(_DBConn);
+        protected static string DBStr { get; } = Properties.Settings.Default.Db;
+        protected SqlConnection Connection { get; set; } = new SqlConnection(DBStr);
+
 
         public void Dispose()
         {
-            _Connection.Close();
+            Connection.Close();
         }
     }
 }

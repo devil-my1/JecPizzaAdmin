@@ -11,11 +11,20 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme
-                    BaseTheme="Light"
-                    PrimaryColor="DeepPurple"
-                    SecondaryColor="Lime" />
+                    BaseTheme="Dark"
+                    PrimaryColor="BlueGrey"
+                    SecondaryColor="Teal" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF518C89" />
+            <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#accbda" />
+            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#4f6c7a" />
+            <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF" />
+            <!--  accent  -->
+            <SolidColorBrush x:Key="SecondaryHueMidBrush" Color="#fd6332" />
+            <SolidColorBrush x:Key="SecondaryHueMidForegroundBrush" Color="#FFFFFF" />
             <v:ViewModelLocator x:Key="Locator" />
             <localizatorHelper:LocalisationHelper x:Key="langHelper" />
         </ResourceDictionary>

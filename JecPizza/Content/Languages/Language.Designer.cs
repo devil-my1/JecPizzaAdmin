@@ -61,7 +61,16 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Accept.
+        ///   Ищет локализованную строку, похожую на ソフトについて.
+        /// </summary>
+        public static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 確定.
         /// </summary>
         public static string Accept {
             get {
@@ -70,7 +79,7 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Account.
+        ///   Ищет локализованную строку, похожую на アカウント.
         /// </summary>
         public static string Account {
             get {
@@ -79,7 +88,25 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на New Reservation.
+        ///   Ищет локализованную строку, похожую на 商品追加.
+        /// </summary>
+        public static string AddGoods {
+            get {
+                return ResourceManager.GetString("AddGoods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 商品管理.
+        /// </summary>
+        public static string AddProduct {
+            get {
+                return ResourceManager.GetString("AddProduct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 予約する.
         /// </summary>
         public static string AddRes {
             get {
@@ -88,7 +115,7 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Cancel.
+        ///   Ищет локализованную строку, похожую на キャンセル.
         /// </summary>
         public static string Cancel {
             get {
@@ -97,7 +124,16 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Close.
+        ///   Ищет локализованную строку, похожую на 更新.
+        /// </summary>
+        public static string Change {
+            get {
+                return ResourceManager.GetString("Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на _閉じる.
         /// </summary>
         public static string Close {
             get {
@@ -106,7 +142,16 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Date and Time.
+        ///   Ищет локализованную строку, похожую на ダッシュボード.
+        /// </summary>
+        public static string Dash {
+            get {
+                return ResourceManager.GetString("Dash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 日にち.
         /// </summary>
         public static string Date {
             get {
@@ -115,7 +160,16 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Delivery.
+        ///   Ищет локализованную строку, похожую на 削除.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 配達管理.
         /// </summary>
         public static string Delivery {
             get {
@@ -124,16 +178,7 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Drink Menu.
-        /// </summary>
-        public static string Drink {
-            get {
-                return ResourceManager.GetString("Drink", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Edit.
+        ///   Ищет локализованную строку, похожую на 編集.
         /// </summary>
         public static string Edit {
             get {
@@ -142,16 +187,43 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на English.
+        ///   Ищет локализованную строку, похожую на _英語.
         /// </summary>
-        public static string Eng {
+        public static string English {
             get {
-                return ResourceManager.GetString("Eng", resourceCulture);
+                return ResourceManager.GetString("English", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Food Menu.
+        ///   Ищет локализованную строку, похожую на 編集失敗!.
+        /// </summary>
+        public static string ErEdit {
+            get {
+                return ResourceManager.GetString("ErEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на _閉じる.
+        /// </summary>
+        public static string Exit {
+            get {
+                return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на _ファイル.
+        /// </summary>
+        public static string File {
+            get {
+                return ResourceManager.GetString("File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на フードメニュー.
         /// </summary>
         public static string Food {
             get {
@@ -160,61 +232,43 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Friedns.
+        ///   Ищет локализованную строку, похожую на 商品名.
         /// </summary>
-        public static string Friedns {
+        public static string GName {
             get {
-                return ResourceManager.GetString("Friedns", resourceCulture);
+                return ResourceManager.GetString("GName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Home.
+        ///   Ищет локализованную строку, похожую на 商品グループID.
         /// </summary>
-        public static string Home {
+        public static string GoodsGrId {
             get {
-                return ResourceManager.GetString("Home", resourceCulture);
+                return ResourceManager.GetString("GoodsGrId", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Info.
+        ///   Ищет локализованную строку, похожую на _日本語.
         /// </summary>
-        public static string Info {
+        public static string Japanese {
             get {
-                return ResourceManager.GetString("Info", resourceCulture);
+                return ResourceManager.GetString("Japanese", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Japanese.
+        ///   Ищет локализованную строку, похожую на _言語.
         /// </summary>
-        public static string Japan {
+        public static string Lang {
             get {
-                return ResourceManager.GetString("Japan", resourceCulture);
+                return ResourceManager.GetString("Lang", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Languages.
-        /// </summary>
-        public static string Languages {
-            get {
-                return ResourceManager.GetString("Languages", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Messenger.
-        /// </summary>
-        public static string Messenger {
-            get {
-                return ResourceManager.GetString("Messenger", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Name.
+        ///   Ищет локализованную строку, похожую на 名前.
         /// </summary>
         public static string Name {
             get {
@@ -223,7 +277,16 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Notification.
+        ///   Ищет локализованную строку, похожую на 新商品.
+        /// </summary>
+        public static string New {
+            get {
+                return ResourceManager.GetString("New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на お知らせ.
         /// </summary>
         public static string Notif {
             get {
@@ -232,7 +295,16 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на People.
+        ///   Ищет локализованную строку, похожую на _ファイルを開く.
+        /// </summary>
+        public static string Open {
+            get {
+                return ResourceManager.GetString("Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 人数.
         /// </summary>
         public static string People {
             get {
@@ -241,7 +313,7 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Phone Number.
+        ///   Ищет локализованную строку, похожую на 電話番号.
         /// </summary>
         public static string PhoneN {
             get {
@@ -250,7 +322,25 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Reservation.
+        ///   Ищет локализованную строку, похожую на 価格.
+        /// </summary>
+        public static string Price {
+            get {
+                return ResourceManager.GetString("Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на おすすめ品.
+        /// </summary>
+        public static string Rec {
+            get {
+                return ResourceManager.GetString("Rec", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 予約管理.
         /// </summary>
         public static string Reservation {
             get {
@@ -259,16 +349,25 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Russian.
+        ///   Ищет локализованную строку, похожую на _ロシア語.
         /// </summary>
-        public static string Russ {
+        public static string Russian {
             get {
-                return ResourceManager.GetString("Russ", resourceCulture);
+                return ResourceManager.GetString("Russian", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Settings.
+        ///   Ищет локализованную строку, похожую на 検索.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на _設定.
         /// </summary>
         public static string Settings {
             get {
@@ -277,7 +376,16 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Surname.
+        ///   Ищет локализованную строку, похожую на 編集成功!.
+        /// </summary>
+        public static string SucEdit {
+            get {
+                return ResourceManager.GetString("SucEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 名字.
         /// </summary>
         public static string Surname {
             get {
@@ -286,11 +394,20 @@ namespace JecPizza.Content.Languages {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на JecPizzaAdministrator.
+        ///   Ищет локализованную строку, похожую на JecPizzaアドミニストレータ.
         /// </summary>
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на トッピング有無.
+        /// </summary>
+        public static string Topping {
+            get {
+                return ResourceManager.GetString("Topping", resourceCulture);
             }
         }
     }
