@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using JecPizza.Models;
 using JecPizza.Services.BaseService;
-using Microsoft.Extensions.Primitives;
 
 namespace JecPizza.Services
 {
@@ -24,7 +22,7 @@ namespace JecPizza.Services
             SqlDataAdapter adapter = new SqlDataAdapter(sql, Connection);
             DataSet ds = new DataSet();
 
-            if (adapter.Fill(ds, "goods") <= 0) yield return null;
+            if (adapter.Fill(ds, "goods") <= 0) yield break;
 
             dt = ds.Tables["goods"];
 
@@ -35,11 +33,11 @@ namespace JecPizza.Services
             {
                 Goods goods = new Goods()
                 {
-                    GoodsId = data[0].ToString(),
-                    Name = data["Name"].ToString(),
+                    GoodsId = data[0].ToString()!,
+                    Name = data["Name"].ToString()!,
                     Price = int.Parse(data["Price"].ToString()!, CultureInfo.InvariantCulture),
                     IsRecommend = bool.Parse(data["IsRecommend"].ToString()!),
-                    GoodsGroupId = data["GoodsGroupId"].ToString(),
+                    GoodsGroupId = data["GoodsGroupId"].ToString()!,
                     HasTopping = bool.Parse(data["HasTopping"].ToString()!),
                     Image = path.Substring(0, path.IndexOf("\\bin", StringComparison.OrdinalIgnoreCase)) + "\\Content\\Images\\" + data["Image"].ToString(),
                     IsNew = bool.Parse(data["IsNew"].ToString()!),
@@ -50,6 +48,32 @@ namespace JecPizza.Services
 
 
 
+        }
+
+        public IDictionary<string, string> GetAllGoodsGroup()
+        {
+            IDictionary<string, string> ret_dict = null;
+
+
+            Connection.Open();
+
+            string sql = "Select * from GoodsGroup";
+            SqlDataAdapter adapter = new SqlDataAdapter(sql, Connection);
+            DataSet ds = new DataSet();
+
+            if (adapter.Fill(ds, "ggtable") == 0) return null;
+
+            DataTable dt = ds.Tables["ggtable"];
+            ret_dict = new Dictionary<string, string>();
+
+            foreach (DataRow row in dt.Rows)
+                ret_dict.Add(row["GroupName"].ToString() ?? "", row["GoodsGroupId"].ToString());
+            
+
+            Connection.Close();
+
+
+            return ret_dict;
         }
 
         public Goods GetGoods(string gId)
@@ -72,12 +96,12 @@ namespace JecPizza.Services
             ret_goods = new Goods()
             {
                 GoodsId = gId,
-                Name = dt.Rows[0]["Name"].ToString(),
+                Name = dt.Rows[0]["Name"].ToString()!,
                 Price = int.Parse(dt.Rows[0]["Price"].ToString()!, CultureInfo.InvariantCulture),
                 IsRecommend = bool.Parse(dt.Rows[0]["IsRecommend"].ToString()!),
-                GoodsGroupId = dt.Rows[0]["GoodsGroupId"].ToString(),
+                GoodsGroupId = dt.Rows[0]["GoodsGroupId"].ToString()!,
                 HasTopping = bool.Parse(dt.Rows[0]["HasTopping"].ToString()!),
-                Image = dt.Rows[0]["Image"].ToString(),
+                Image = dt.Rows[0]["Image"].ToString()!,
                 IsNew = bool.Parse(dt.Rows[0]["IsNew"].ToString()!),
 
             };

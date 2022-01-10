@@ -7,6 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tool="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     Title="{Binding Source={StaticResource langHelper}, Path=[lang.Title]}"
     Width="1200"
     Height="800"
@@ -82,6 +84,29 @@
                         CommandParameter="ja-JP"
                         Header="{Binding Source={StaticResource langHelper}, Path=[lang.Japanese]}" />
                 </MenuItem>
+                <MenuItem
+                    Height="auto"
+                    Padding="16,4"
+                    Command="{Binding SetBudgetCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Source={StaticResource langHelper}, Path=[lang.Sb]}" />
+                            <Separator
+                                Width="20"
+                                Height="20"
+                                Margin="3,0"
+                                RenderTransformOrigin="0.5,0.5">
+                                <Separator.RenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="90" />
+
+                                    </TransformGroup>
+                                </Separator.RenderTransform>
+                            </Separator>
+                            <materialDesign:PackIcon Width="25" Kind="LockAlert" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
             </MenuItem>
             <MenuItem
                 Height="auto"
@@ -119,6 +144,145 @@
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </TabItem.Header>
+
+                <materialDesign:DialogHost
+                    CloseOnClickAway="True"
+                    DialogContent="{Binding DialogContent, UpdateSourceTrigger=PropertyChanged}"
+                    Identifier="rootHost"
+                    IsOpen="{Binding IsDialogOpen}"
+                    OverlayBackground="{StaticResource PrimaryHueDarkBrush}">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+
+                        <wpf:Gauge
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Foreground="IndianRed"
+                            FromColor="DarkRed"
+                            HighFontSize="20"
+                            InnerRadius="110"
+                            LabelFormatter="{Binding Label}"
+                            ToColor="GreenYellow"
+                            Uses360Mode="True"
+                            Value="{Binding TodaysTotalSales}"
+                            From="0"
+                            To="100">
+                            <wpf:Gauge.GaugeRenderTransform>
+                                <TransformGroup>
+                                    <RotateTransform Angle="90" />
+                                    <ScaleTransform ScaleX="1" />
+                                </TransformGroup>
+                            </wpf:Gauge.GaugeRenderTransform>
+                        </wpf:Gauge>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            FontFamily="Bahnschrift"
+                            FontSize="22"
+                            Text="{Binding Source={StaticResource langHelper}, Path=[lang.TBI]}" />
+
+
+                        <wpf:PieChart
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            DataTooltip="{x:Null}"
+                            FontSize="18"
+                            Hoverable="True"
+                            LegendLocation="Right">
+                            <wpf:PieChart.Series>
+                                <wpf:PieSeries
+                                    Title="Pizza"
+                                    DataLabels="True"
+                                    FontSize="18"
+                                    Values="60" />
+                                <wpf:PieSeries
+                                    Title="Pasta"
+                                    DataLabels="True"
+                                    FontSize="18"
+                                    Values="56" />
+                                <wpf:PieSeries
+                                    Title="Cheese"
+                                    DataLabels="True"
+                                    FontSize="18"
+                                    Values="22" />
+                                <wpf:PieSeries
+                                    Title="Desert"
+                                    DataLabels="True"
+                                    FontSize="18"
+                                    Values="11" />
+                            </wpf:PieChart.Series>
+                        </wpf:PieChart>
+
+                        <Grid
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Margin="20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel
+                                Grid.Row="0"
+                                Margin="10"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="18"
+                                    Text="{Binding Source={StaticResource langHelper}, Path=[lang.Search]}" />
+                                <ComboBox
+                                    x:Name="OutlinedComboBox"
+                                    Width="256"
+                                    materialDesign:HintAssist.Hint="{Binding Source={StaticResource langHelper}, Path=[lang.ByMonth]}"
+                                    FontSize="18"
+                                    ItemsSource="{Binding Months}"
+                                    SelectedIndex="{Binding SelectedMonthIndex}"
+                                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="SelectionChanged">
+                                            <b:InvokeCommandAction Command="{Binding MonthChangedCommand}" />
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+                            </StackPanel>
+                            <wpf:CartesianChart Grid.Row="1">
+                                <wpf:CartesianChart.Series>
+                                    <wpf:ColumnSeries
+                                        Title="{Binding Source={StaticResource langHelper}, Path=[lang.Sales]}"
+                                        Fill="ForestGreen"
+                                        Values="{Binding ColumnValues}" />
+                                </wpf:CartesianChart.Series>
+                                <wpf:CartesianChart.AxisX>
+                                    <wpf:Axis Labels="{Binding Dates}" LabelsRotation="-20">
+                                        <wpf:Axis.Separator>
+                                            <wpf:Separator Step="1" />
+                                        </wpf:Axis.Separator>
+                                    </wpf:Axis>
+                                </wpf:CartesianChart.AxisX>
+                                <wpf:CartesianChart.AxisY>
+                                    <wpf:Axis Labels="{Binding MonthDataValues.Values}" />
+                                </wpf:CartesianChart.AxisY>
+                            </wpf:CartesianChart>
+                        </Grid>
+
+
+                    </Grid>
+
+
+                </materialDesign:DialogHost>
             </TabItem>
             <TabItem
                 Width="120"
@@ -138,68 +302,6 @@
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </TabItem.Header>
-                <!--<ListView Width="auto" ItemsSource="{Binding GoodsTable}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding GoodsId}" Header="Goods ID" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Goods Name" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Price}" Header="Price" />
-                            <GridViewColumn DisplayMemberBinding="{Binding GoodsGroupId}" Header="GoodsGroupID" />
-                            <GridViewColumn DisplayMemberBinding="{Binding IsRecommend}" Header="IsRecommended" />
-                            <GridViewColumn DisplayMemberBinding="{Binding IsNew}" Header="IsNew" />
-                            <GridViewColumn DisplayMemberBinding="{Binding HasTopping}" Header="HasTopping" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Image}" Header="Image">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Image Source="{Binding}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
-                <!--<DataGrid
-                    AreRowDetailsFrozen="True"
-                    AutoGenerateColumns="False"
-                    CanUserSortColumns="True"
-                    DataContext="{Binding GoodsTable}"
-                    GridLinesVisibility="All"
-                    IsReadOnly="False"
-                    ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window, AncestorLevel=1}, Path=DataContext.GoodsTable}">
-
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="GOODS ID">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                                        <materialDesign:PackIcon Margin="5,0,5,5" Kind="MusicNoteWhole" />
-                                        <TextBlock
-                                            VerticalAlignment="Center"
-                                            Text="{Binding Path=GoodsId}"
-                                            TextAlignment="Center" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="NAME" />
-                        <DataGridTextColumn Binding="{Binding Price, StringFormat=0円}" Header="PRICE" />
-                        <DataGridCheckBoxColumn Binding="{Binding IsRecommend}" Header="RECOMMENDED" />
-                        <DataGridCheckBoxColumn Binding="{Binding IsNew}" Header="NEW" />
-                        <DataGridCheckBoxColumn Binding="{Binding HasTopping}" Header="HAS TOPPING" />
-                        <DataGridTemplateColumn Header="IMAGE">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Image
-                                        Width="75"
-                                        Height="75"
-                                        Source="{Binding Converter={StaticResource imageCon}, Path=Image}"
-                                        Stretch="Fill" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>-->
-
 
                 <materialDesign:DialogHost
                     CloseOnClickAway="True"
@@ -486,6 +588,9 @@
                                                 <Button
                                                     Grid.Column="1"
                                                     Margin="3"
+                                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DeleteGoodsCommand}"
+                                                    Content="{materialDesign:PackIcon Delete,
+                                                                                      Size=25}"
                                                     ToolTip="{Binding Source={StaticResource langHelper}, Path=[lang.Delete]}">
                                                     <Button.Style>
                                                         <Style BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}" TargetType="{x:Type Button}">
@@ -496,13 +601,6 @@
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Button.Style>
-                                                    <Button.Content>
-                                                        <materialDesign:PackIcon
-                                                            Name="deleteIcon"
-                                                            Width="25"
-                                                            Height="25"
-                                                            Kind="Delete" />
-                                                    </Button.Content>
                                                 </Button>
                                             </Grid>
                                         </StackPanel>
@@ -534,7 +632,51 @@
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </TabItem.Header>
+                <materialDesign:DialogHost
+                    CloseOnClickAway="True"
+                    DialogContent="{Binding DialogContent, UpdateSourceTrigger=PropertyChanged}"
+                    Identifier="rootHost"
+                    IsOpen="{Binding IsDialogOpen}"
+                    OverlayBackground="{StaticResource PrimaryHueDarkBrush}">
 
+
+                    <materialDesign:DialogHost.ContextMenu>
+                        <ContextMenu Width="180" VerticalContentAlignment="Center">
+                            <MenuItem Command="{Binding AddReserveCommand}" Header="{Binding Source={StaticResource langHelper}, Path=[lang.AddRes]}" />
+                            <MenuItem Command="{Binding EditReserveCommand}" Header="{Binding Source={StaticResource langHelper}, Path=[lang.Edit]}" />
+                            <MenuItem
+                                Command="{Binding DeleteReserveCommand}"
+                                Foreground="Red"
+                                Header="{Binding Source={StaticResource langHelper}, Path=[lang.Delete]}" />
+                        </ContextMenu>
+                    </materialDesign:DialogHost.ContextMenu>
+                    <DockPanel LastChildFill="True">
+                        <Button
+                            Width="auto"
+                            Height="auto"
+                            Margin="10,20,30,0"
+                            Padding="16,8"
+                            HorizontalAlignment="Right"
+                            Command="{Binding UpdateReserveTableCommand}"
+                            Content="{Binding Source={StaticResource langHelper}, Path=[lang.URT]}"
+                            DockPanel.Dock="Top"
+                            FontSize="22"
+                            FontWeight="Bold"
+                            Style="{StaticResource MaterialDesignPaperButton}" />
+                        <DataGrid
+                            Margin="20"
+                            AreRowDetailsFrozen="True"
+                            AutoGenerateColumns="True"
+                            CanUserSortColumns="True"
+                            ColumnWidth="*"
+                            DockPanel.Dock="Top"
+                            GridLinesVisibility="All"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window, AncestorLevel=1}, Path=DataContext.ReserveCollection}"
+                            SelectedItem="{Binding SelectedReserve}" />
+
+                    </DockPanel>
+                </materialDesign:DialogHost>
             </TabItem>
             <TabItem
                 Width="120"

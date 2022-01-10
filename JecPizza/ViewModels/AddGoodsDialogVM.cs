@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using JecPizza.Infostructure.Command;
 using JecPizza.Models;
@@ -12,7 +14,7 @@ namespace JecPizza.ViewModels
     public class AddGoodsDialogVM : BaseViewModel
     {
         private BaseViewModel _host;
-
+        private IDictionary<string, string> GgDictionary;
 
         #region NewGoods : Goods - New Goods Model
 
@@ -35,6 +37,8 @@ namespace JecPizza.ViewModels
 
         #endregion
 
+        public ICollection<string> GoodsGroup { get; set; }
+
         public ICommand ChangeImageCommand { get; set; }
         public ICommand AddGoodsCommand { get; set; }
 
@@ -47,12 +51,20 @@ namespace JecPizza.ViewModels
         public AddGoodsDialogVM(BaseViewModel host)
         {
             this._host = host;
+            MainWindowVM mvm = (MainWindowVM)_host;
+
             _NewGoods = new Goods()
             {
                 Image = @"C:\Study\School\JecPizza\JecPizza\Content\Images\GCGP.jpg",
                 IsNew = true
             };
+
             Image = NewGoods.Image;
+
+            GgDictionary = mvm.GoodsService.GetAllGoodsGroup();
+
+            GoodsGroup = GgDictionary.Keys;
+
 
             ChangeImageCommand = new RellayCommand(OnImageChange);
             AddGoodsCommand = new RellayCommand(OnAddGoods, OnCanAdd);
@@ -65,14 +77,13 @@ namespace JecPizza.ViewModels
         private void OnAddGoods(object Obj)
         {
             MainWindowVM mvm = (MainWindowVM)_host;
+            var temp = GgDictionary[NewGoods.GoodsGroupId];
+            NewGoods.GoodsGroupId = temp;
             var res = mvm.GoodsService.InsertGoods(NewGoods);
 
-            mvm.cv.Source = mvm.GoodsService.GetAllGoods();
-            mvm.cv.View.Refresh();
-            mvm.GoodsCollection = mvm.cv.View;
             mvm.GoodsCollection.Refresh();
 
-            System.Windows.MessageBox.Show(res ? LocalizatorHelper.ResourceManagerService.GetResourceString("lang", "SucEdit") : LocalizatorHelper.ResourceManagerService.GetResourceString("lang", "ErEdit"), "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            System.Windows.MessageBox.Show(res ? LocalizatorHelper.ResourceManagerService.GetResourceString("lang", "SucAdd") : LocalizatorHelper.ResourceManagerService.GetResourceString("lang", "ErEdit"), "Info", MessageBoxButton.OK, MessageBoxImage.Information);
 
             mvm.IsDialogOpen = false;
 

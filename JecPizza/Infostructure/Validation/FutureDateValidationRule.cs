@@ -13,8 +13,9 @@ namespace JecPizza.Infostructure.Validation
                 DateTimeStyles.AssumeLocal | DateTimeStyles.AllowWhiteSpaces,
                 out DateTime time)) return new ValidationResult(false, "Invalid date");
 
+
             return time.Date < DateTime.Now.Date
-                ? new ValidationResult(false, "Future date required")
+                ? new ValidationResult(false, "Input Correct format of date")
                 : ValidationResult.ValidResult;
         }
     }

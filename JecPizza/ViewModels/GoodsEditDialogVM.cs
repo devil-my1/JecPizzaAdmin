@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Input;
 using JecPizza.Infostructure.Command;
 using JecPizza.Models;
-using JecPizza.Services;
 using JecPizza.ViewModels.Base;
 using Microsoft.Win32;
 
@@ -108,11 +107,7 @@ namespace JecPizza.ViewModels
            MainWindowVM mvm = (MainWindowVM)Host;
             bool eres = mvm.GoodsService.EditGoods(CurrentGoods);
 
-          
-
-            mvm.cv.Source = mvm.GoodsService.GetAllGoods();
-            mvm.cv.View.Refresh();
-            mvm.GoodsCollection = mvm.cv.View;
+            
             mvm.GoodsCollection.Refresh();
 
             mvm.IsDialogOpen = false;
@@ -124,8 +119,5 @@ namespace JecPizza.ViewModels
         #endregion
 
     }
-    //todo Search Goods
-    //todo Add Goods
-    //todo Delete goods
 
 }

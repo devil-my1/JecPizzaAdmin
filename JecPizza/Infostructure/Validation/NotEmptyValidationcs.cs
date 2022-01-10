@@ -7,7 +7,7 @@ namespace JecPizza.Infostructure.Validation
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string messCont = string.Empty;
+            string messCont;
 
             switch (CultureInfo.CurrentCulture.Name)
             {

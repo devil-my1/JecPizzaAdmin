@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
-using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using JecPizza.Infostructure.Assist;
 using JecPizza.Infostructure.Command;
 using JecPizza.Models;
 using JecPizza.Services;
 using JecPizza.ViewModels.Base;
 using JecPizza.Views.Dialogs;
+using LiveCharts;
 using LocalizatorHelper;
 
 namespace JecPizza.ViewModels
@@ -17,14 +21,107 @@ namespace JecPizza.ViewModels
     public class MainWindowVM : BaseViewModel
     {
         public GoodsService GoodsService { get; set; }
-        public readonly CollectionViewSource cv = new CollectionViewSource();
-        private ICollectionView _collectionView;
+        public ReservationService ReservationServices { get; set; }
+        public PurchaseDeliveryService PurchaseDeliveryService { get; set; }
+        public readonly CollectionViewSource gcv = new CollectionViewSource();
+        public readonly CollectionViewSource rcv = new CollectionViewSource();
         public bool IsAscending { get; set; } = true;
 
 
 
 
         #region Properties
+
+
+        #region Months : List<string> - Months Item for Combo Box
+
+        /// <summary>Months Item for Combo Box</summary>
+        private List<string> _Months;
+
+        /// <summary>Months Item for Combo Box</summary>
+        public List<string> Months { get => _Months; set => Set(ref _Months, value); }
+
+        #endregion
+
+        #region Dates : IList<string> - X Axsis label
+
+        /// <summary>X Axsis label</summary>
+        private IList<string> _Dates;
+
+        /// <summary>X Axsis label</summary>
+        public IList<string> Dates { get => _Dates; set => Set(ref _Dates, value); }
+
+        #endregion
+
+        #region ColumnValues : IChartValues - Chart Column Values
+
+        /// <summary>Chart Column Values</summary>
+        private IChartValues _ColumnValues;
+
+        /// <summary>Chart Column Values</summary>
+        public IChartValues ColumnValues { get => _ColumnValues; set => Set(ref _ColumnValues, value); }
+
+        #endregion
+
+        #region MonthDataValues : IDictionary<DateTime,int> - Getting totals for each day in a selecte month 
+
+        /// <summary>Getting totals for each day in a selecte month </summary>
+        private IDictionary<DateTime, int> _MonthDataValues;
+
+        /// <summary>Getting totals for each day in a selecte month </summary>
+        public IDictionary<DateTime, int> MonthDataValues { get => _MonthDataValues; set => Set(ref _MonthDataValues, value); }
+
+        #endregion
+
+        #region SelectedMonth : string - Combo box Selected Month Value
+
+        /// <summary>Combo box Selected Month Value</summary>
+        private int _SelectedMonthIndex;
+
+        /// <summary>Combo box Selected Month Value</summary>
+        public int SelectedMonthIndex { get => _SelectedMonthIndex; set => Set(ref _SelectedMonthIndex, value); }
+
+        #endregion
+
+        #region Func : Func<double,str> - Chart Label Formater 
+
+        /// <summary>Chart Label Formater </summary>
+        private Func<double, string> _Label;
+
+        /// <summary>Chart Label Formater </summary>
+        public Func<double, string> Label { get => _Label; set => Set(ref _Label, value); }
+
+        #endregion
+
+        #region SalesValue : double - Sales Value
+
+        /// <summary>Sales Value</summary>
+        private double _SalesValue;
+
+        /// <summary>Sales Value</summary>
+        public double SalesValue { get => _SalesValue; set => Set(ref _SalesValue, value); }
+
+        #endregion
+
+        #region Budget : int - Today's Budget
+
+        /// <summary>Today's Budget</summary>
+        private int _Budget;
+
+        /// <summary>Today's Budget</summary>
+        public int Budget { get => _Budget; set => Set(ref _Budget, value); }
+
+        #endregion
+
+        #region TodaysTotalSales : double - Todays Total Sales
+
+        /// <summary>Todays Total Sales</summary>
+        private double _TodaysTotalSales;
+
+        /// <summary>Todays Total Sales</summary>
+        public double TodaysTotalSales { get => _TodaysTotalSales; set => Set(ref _TodaysTotalSales, value); }
+
+        #endregion
 
         #region CurrentSelectedGoods : Goods - Select Goods
 
@@ -77,7 +174,7 @@ namespace JecPizza.ViewModels
             get => _Search; set
             {
                 Set(ref _Search, value);
-                cv.View.Refresh();
+                gcv.View.Refresh();
             }
         }
 
@@ -93,8 +190,32 @@ namespace JecPizza.ViewModels
 
         #endregion
 
+        #region GoodsCollection : ICollectionView - Goods Data
 
+        private ICollectionView _collectionView;
         public ICollectionView GoodsCollection { get => _collectionView; set => Set(ref _collectionView, value); }
+
+        #endregion
+
+        #region ReserveCollection : ICollectionView - Reservation Data
+
+        /// <summary>Reservation Data</summary>
+        private ICollectionView _ReserveCollection;
+
+        /// <summary>Reservation Data</summary>
+        public ICollectionView ReserveCollection { get => _ReserveCollection; set => Set(ref _ReserveCollection, value); }
+
+        #endregion
+
+        #region SelectedReserve : Reserve - Reserve Row Selected
+
+        /// <summary>Reserve Row Selected</summary>
+        private Reserve _SelectedReserve;
+
+        /// <summary>Reserve Row Selected</summary>
+        public Reserve SelectedReserve { get => _SelectedReserve; set => Set(ref _SelectedReserve, value); }
+
+        #endregion
 
         #endregion
 
@@ -104,10 +225,16 @@ namespace JecPizza.ViewModels
         public ICommand CloseWindowCommand { get; }
         public ICommand ChangeLanguageCommand { get; }
         public ICommand OpenEditGoodsCommand { get; set; }
-        public ICommand SelectionChangedCommand { get; set; }
         public ICommand AddNewGoodsCommand { get; set; }
+        public ICommand DeleteGoodsCommand { get; set; }
         public ICommand SortCommand { get; set; }
         public ICommand CheckedCommand { get; set; }
+        public ICommand EditReserveCommand { get; set; }
+        public ICommand DeleteReserveCommand { get; set; }
+        public ICommand AddReserveCommand { get; set; }
+        public ICommand UpdateReserveTableCommand { get; set; }
+        public ICommand SetBudgetCommand { get; set; }
+        public ICommand MonthChangedCommand { get; set; }
 
         #endregion
 
@@ -116,19 +243,47 @@ namespace JecPizza.ViewModels
 
         public MainWindowVM()
         {
+
             ResourceManagerService.RegisterManager("lang", Content.Languages.Language.ResourceManager);
             ResourceManagerService.ChangeLocale(Properties.Settings.Default.Language);
-            GoodsService = new GoodsService();
 
-            cv.Filter += OnGoodsTableFilter;
-            cv.Source = GoodsService.GetAllGoods();
-            cv.View.Refresh();
-            GoodsCollection = cv.View;
-            GoodsCollection.Refresh();
+            GoodsService = new GoodsService();
+            ReservationServices = new ReservationService();
+            PurchaseDeliveryService = new PurchaseDeliveryService();
+
+            gcv.Filter += OnGoodsTableFilter;
+            gcv.Source = GoodsService.GetAllGoods();
+            rcv.Source = ReservationServices.GetAllReserve();
+
 
             #region Properties
 
+
+            Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
+            SelectedMonthIndex = 0;
+
+            MonthDataValues = PurchaseDeliveryService.GetTotalSalesByMonth(1);
+            ColumnValues = new ChartValues<int>(MonthDataValues.Values);
+            Dates = new List<string>();
+
+            foreach (DateTime dt in MonthDataValues.Keys)
+                Dates.Add(dt.Date.ToString("MM/dd", CultureInfo.InvariantCulture) ?? "0");
+
+
             IsDialogOpen = false;
+
+            GoodsCollection = gcv.View;
+            GoodsCollection.Refresh();
+
+            ReserveCollection = rcv.View;
+            ReserveCollection.Refresh();
+
+            Label = ShowLabelFormat;
+
+            Budget = Properties.Settings.Default.Buget;
+
+            TodaysTotalSales = PurchaseDeliveryService.GetTodaysTotalSales() / Budget * 100;
+
 
             #endregion
 
@@ -142,6 +297,10 @@ namespace JecPizza.ViewModels
                 Properties.Settings.Default["Language"] = p?.ToString() ?? "en-US";
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
+
+                Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
+                SelectedMonthIndex = 0;
+
             }, p => !Equals(p?.ToString() ?? "us-US", Properties.Settings.Default.Language));
 
             OpenEditGoodsCommand = new RellayCommand(
@@ -158,15 +317,108 @@ namespace JecPizza.ViewModels
 
             AddNewGoodsCommand = new RellayCommand(OnAddNewGoods);
 
+            DeleteGoodsCommand = new RellayCommand(OnDeleteGoods, p => CurrentSelectedGoods != null);
+
             SortCommand = new RellayCommand(OnSortCollection, p => !string.IsNullOrEmpty(FilterOption));
 
             CheckedCommand = new RellayCommand(OnChecked);
+
+            AddReserveCommand = new RellayCommand(OnAddNewReserve);
+
+            EditReserveCommand = new RellayCommand(OnEditReserve, p => SelectedReserve != null);
+
+            DeleteReserveCommand = new RellayCommand(OnDeleteReserve, p => SelectedReserve != null);
+
+            UpdateReserveTableCommand = new RellayCommand(OnReserveDateUpdate);
+
+            SetBudgetCommand = new RellayCommand(OnSetBudget);
+
+            MonthChangedCommand = new RellayCommand(OnSelectionMonthChanged);
 
             #endregion
         }
 
 
+
+
         #region Handlers
+
+        private void OnSelectionMonthChanged(object Obj)
+        {
+            MonthDataValues = PurchaseDeliveryService.GetTotalSalesByMonth(SelectedMonthIndex + 1);
+            if (MonthDataValues != null)
+            {
+                ColumnValues = new ChartValues<int>(MonthDataValues.Values);
+                Dates.Clear();
+                foreach (DateTime dt in MonthDataValues.Keys)
+                    Dates.Add(dt.Date.ToString("MM/dd", CultureInfo.InvariantCulture) ?? "0");
+            }
+            else
+            {
+                ColumnValues.Clear();
+                Dates.Clear();
+            }
+
+        }
+
+
+        private void OnSetBudget(object Obj)
+        {
+            var sbg_dialog = new SetBudgetDialog()
+            {
+                DataContext = new SetBudgetDialogVM(this)
+            };
+            DialogContent = sbg_dialog;
+            IsDialogOpen = true;
+        }
+
+        private string ShowLabelFormat(double value) => $"{Math.Floor(TodaysTotalSales),10}%" + $"\n{Math.Floor(TodaysTotalSales * Budget / 100)}円 / {Budget}円";
+
+
+        private void OnReserveDateUpdate(object Obj)
+        {
+            MessageBox.Show(
+                $"Updated {ReservationServices.UpdadateReservedTable()} cases!", ResourceManagerService.GetResourceString("lang", "Title"), MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            ReserveCollection.Refresh();
+        }
+
+        private void OnDeleteReserve(object Obj)
+        {
+            var res = System.Windows.MessageBox.Show("Delete the Reserve ID: " + SelectedReserve.ReserveId + "?", ResourceManagerService.GetResourceString("lang", "Title"), MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if (res == MessageBoxResult.Cancel) return;
+            ReservationServices.DeleteReserve(SelectedReserve.ReserveId);
+            ReserveCollection.Refresh();
+        }
+
+        private void OnDeleteGoods(object Obj)
+        {
+            var res = System.Windows.MessageBox.Show("Delete the Goods Name: " + CurrentSelectedGoods.Name + "?", ResourceManagerService.GetResourceString("lang", "Title"), MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if (res == MessageBoxResult.Cancel) return;
+            GoodsService.DeleteGoods(CurrentSelectedGoods);
+            GoodsCollection.Refresh();
+
+        }
+
+        private void OnEditReserve(object Obj)
+        {
+            var resAddDialog = new ReserveDialog()
+            {
+                DataContext = new ReserveDialogVM(this, ReserveMode.EditMode, SelectedReserve)
+            };
+            DialogContent = resAddDialog;
+            IsDialogOpen = true;
+        }
+
+        private void OnAddNewReserve(object p)
+        {
+            var resAddDialog = new ReserveDialog()
+            {
+                DataContext = new ReserveDialogVM(this, ReserveMode.AddMode)
+            };
+            DialogContent = resAddDialog;
+            IsDialogOpen = true;
+        }
 
         private void OnChecked(object p)
         {
@@ -194,7 +446,7 @@ namespace JecPizza.ViewModels
                 e.Accepted = false;
                 return;
             }
-            
+
 
             if (string.IsNullOrWhiteSpace(Search)) return;
             if (g.Name.Contains(Search, StringComparison.OrdinalIgnoreCase)) return;
@@ -217,7 +469,7 @@ namespace JecPizza.ViewModels
                 GoodsCollection.SortDescriptions.Add(new SortDescription(FilterOption, ListSortDirection.Descending));
                 IsAscending = false;
             }
-            cv.View.Refresh();
+            gcv.View.Refresh();
         }
 
         #endregion

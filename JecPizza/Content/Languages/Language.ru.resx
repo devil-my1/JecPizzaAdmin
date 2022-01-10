@@ -135,6 +135,12 @@
   <data name="AddRes" xml:space="preserve">
     <value>Забронировать</value>
   </data>
+  <data name="Budget" xml:space="preserve">
+    <value>Бюджет</value>
+  </data>
+  <data name="ByMonth" xml:space="preserve">
+    <value>По месяцам</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отменить</value>
   </data>
@@ -177,6 +183,9 @@
   <data name="GoodsGrId" xml:space="preserve">
     <value>Ид группы продукта</value>
   </data>
+  <data name="IsRes" xml:space="preserve">
+    <value>Зарезервированно</value>
+  </data>
   <data name="Japanese" xml:space="preserve">
     <value>_Японский</value>
   </data>
@@ -195,11 +204,17 @@
   <data name="Open" xml:space="preserve">
     <value>_Открыть</value>
   </data>
+  <data name="Pass" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
   <data name="People" xml:space="preserve">
     <value>Количество людей</value>
   </data>
   <data name="PhoneN" xml:space="preserve">
     <value>Номер телефона</value>
+  </data>
+  <data name="PNum" xml:space="preserve">
+    <value>Кол-во Людей</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Цена</value>
@@ -213,11 +228,23 @@
   <data name="Russian" xml:space="preserve">
     <value>_Русский</value>
   </data>
+  <data name="Sales" xml:space="preserve">
+    <value>Продажы</value>
+  </data>
+  <data name="Sb" xml:space="preserve">
+    <value>Установить Буджет</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Поиск</value>
   </data>
+  <data name="SetBudget" xml:space="preserve">
+    <value>Ввнести сегодняшний буджет</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>_Настройки</value>
+  </data>
+  <data name="SucAdd" xml:space="preserve">
+    <value>Успешно Добавленно</value>
   </data>
   <data name="SucEdit" xml:space="preserve">
     <value>Успешно изменилось!</value>
@@ -225,10 +252,22 @@
   <data name="Surname" xml:space="preserve">
     <value>Фамилия</value>
   </data>
+  <data name="TableNum" xml:space="preserve">
+    <value>Номер Столика</value>
+  </data>
+  <data name="TBI" xml:space="preserve">
+    <value>Бюджетная статистика дня</value>
+  </data>
+  <data name="Tel" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>JecPizza Админ</value>
   </data>
   <data name="Topping" xml:space="preserve">
     <value>Топпинг</value>
+  </data>
+  <data name="URT" xml:space="preserve">
+    <value>Обновить Таблицу Резервирования</value>
   </data>
 </root>

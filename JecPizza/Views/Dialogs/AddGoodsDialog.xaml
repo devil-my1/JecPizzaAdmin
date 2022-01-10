@@ -74,17 +74,17 @@
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox>
-            <TextBox
+            <ComboBox
                 Margin="10"
                 materialDesign:HintAssist.Hint="{Binding [lang.GoodsGrId], Source={StaticResource langHelper}}"
                 FontSize="24"
-                Style="{StaticResource MaterialDesignFloatingHintTextBox}">
-                <Binding Path="NewGoods.GoodsGroupId" UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <validation:NotEmptyValidationcs ValidatesOnTargetUpdated="True" />
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox>
+                IsEditable="False"
+                IsSelected="True"
+                ItemsSource="{Binding GoodsGroup}"
+                SelectedIndex="0"
+                SelectedItem="{Binding NewGoods.GoodsGroupId}"
+                Style="{StaticResource MaterialDesignFilledComboBox}" />
+
             <DockPanel Margin="10,20,10,10" LastChildFill="False">
                 <TextBlock
                     Margin="10,0,0,0"

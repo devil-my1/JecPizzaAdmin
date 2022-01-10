@@ -133,7 +133,13 @@
     <value>商品管理</value>
   </data>
   <data name="AddRes" xml:space="preserve">
-    <value>予約する</value>
+    <value>予約追加する</value>
+  </data>
+  <data name="Budget" xml:space="preserve">
+    <value>予算</value>
+  </data>
+  <data name="ByMonth" xml:space="preserve">
+    <value>月ごとに</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>キャンセル</value>
@@ -180,6 +186,9 @@
   <data name="GoodsGrId" xml:space="preserve">
     <value>商品グループID</value>
   </data>
+  <data name="IsRes" xml:space="preserve">
+    <value>予約済み</value>
+  </data>
   <data name="Japanese" xml:space="preserve">
     <value>_日本語</value>
   </data>
@@ -198,11 +207,17 @@
   <data name="Open" xml:space="preserve">
     <value>_ファイルを開く</value>
   </data>
+  <data name="Pass" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
   <data name="People" xml:space="preserve">
     <value>人数</value>
   </data>
   <data name="PhoneN" xml:space="preserve">
     <value>電話番号</value>
+  </data>
+  <data name="PNum" xml:space="preserve">
+    <value>人数</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>価格</value>
@@ -216,11 +231,23 @@
   <data name="Russian" xml:space="preserve">
     <value>_ロシア語</value>
   </data>
+  <data name="Sales" xml:space="preserve">
+    <value>売上</value>
+  </data>
+  <data name="Sb" xml:space="preserve">
+    <value>本日の予算を設定する</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>検索</value>
   </data>
+  <data name="SetBudget" xml:space="preserve">
+    <value>本日の予算を入力してください</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>_設定</value>
+  </data>
+  <data name="Suc" xml:space="preserve">
+    <value>追加されました</value>
   </data>
   <data name="SucEdit" xml:space="preserve">
     <value>編集成功!</value>
@@ -228,10 +255,22 @@
   <data name="Surname" xml:space="preserve">
     <value>名字</value>
   </data>
+  <data name="TableNum" xml:space="preserve">
+    <value>テーブル番号</value>
+  </data>
+  <data name="TBI" xml:space="preserve">
+    <value>本日の売上予算統計</value>
+  </data>
+  <data name="Tel" xml:space="preserve">
+    <value>電話番号</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>JecPizzaアドミニストレータ</value>
   </data>
   <data name="Topping" xml:space="preserve">
     <value>トッピング有無</value>
+  </data>
+  <data name="URT" xml:space="preserve">
+    <value>予約表を更新する</value>
   </data>
 </root>

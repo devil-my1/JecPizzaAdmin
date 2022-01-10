@@ -45,5 +45,17 @@ namespace JecPizza.Properties {
                 this["Language"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
+        public int Buget {
+            get {
+                return ((int)(this["Buget"]));
+            }
+            set {
+                this["Buget"] = value;
+            }
+        }
     }
 }
