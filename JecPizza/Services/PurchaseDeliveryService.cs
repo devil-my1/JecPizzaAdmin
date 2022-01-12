@@ -111,8 +111,11 @@ namespace JecPizza.Services
 
             string sql = "Select purDate, SUM(Total) as total from Purchase where PurDate like @month  group by PurDate";
 
+            string corectFormatMonth = "-" + (month.ToString().Length == 2 ? month.ToString() : "0" + month) + "%";
+
             SqlDataAdapter adapter = new SqlDataAdapter(sql, Connection);
-            adapter.SelectCommand.Parameters.AddWithValue("@month", DateTime.Now.Year.ToString() + "-_" + month.ToString() + "%");
+
+            adapter.SelectCommand.Parameters.AddWithValue("@month", DateTime.Now.Year + corectFormatMonth);
 
             DataSet ds = new DataSet();
 
@@ -127,6 +130,64 @@ namespace JecPizza.Services
 
 
             return month_data;
+        }
+
+        public IDictionary<string, int> GetTodaysPercentageOfGoods(string customDate = null)
+        {
+            IDictionary<string, int> data = new Dictionary<string, int>();
+            List<string> carts_list = new List<string>();
+
+            customDate ??= DateTime.Now.ToString("MM-dd");
+
+            string sql = "Select CartId from Purchase where PurDate = @date";
+
+            SqlDataAdapter adapter = new SqlDataAdapter(sql, Connection);
+            adapter.SelectCommand.Parameters.AddWithValue("@date", DateTime.Now.Year + "-" + customDate.Replace('/', '-'));
+
+            DataSet ds = new DataSet();
+            Connection.Open();
+            if (adapter.Fill(ds, "carts") == 0)
+            {
+                Connection.Close();
+                return null;
+            }
+
+
+            DataTable dt = ds.Tables["carts"];
+
+            foreach (DataRow dr in dt.Rows)
+                carts_list.Add(dr[0].ToString());
+
+            sql = "Select  GG.GroupName, SUM(Quantity) as Quantity from Cart join  Goods as G on G.GoodsId = Cart.GoodsId join GoodsGroup as GG on GG.GoodsGroupId = G.GoodsGroupId where CartId = @cart group by GG.GroupName";
+
+            foreach (string cart in carts_list)
+            {
+                adapter = new SqlDataAdapter(sql, Connection);
+                adapter.SelectCommand.Parameters.AddWithValue("@cart", cart);
+
+                if (adapter.Fill(ds, "ggo") == 0)
+                {
+                    Connection.Close();
+                    return null;
+                }
+                dt = ds.Tables["ggo"];
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (!data.ContainsKey(dr[0]?.ToString() ?? string.Empty))
+                    {
+                        data.Add(dr[0]?.ToString() ?? string.Empty, int.Parse(dr[1]?.ToString() ?? string.Empty, NumberStyles.Integer));
+                    }
+                    else
+                        data[dr[0]?.ToString() ?? string.Empty] += int.Parse(dr[1]?.ToString() ?? string.Empty, NumberStyles.Integer);
+                }
+
+
+            }
+
+            Connection.Close();
+
+            return data;
         }
     }
 }

@@ -200,30 +200,8 @@
                             DataTooltip="{x:Null}"
                             FontSize="18"
                             Hoverable="True"
-                            LegendLocation="Right">
-                            <wpf:PieChart.Series>
-                                <wpf:PieSeries
-                                    Title="Pizza"
-                                    DataLabels="True"
-                                    FontSize="18"
-                                    Values="60" />
-                                <wpf:PieSeries
-                                    Title="Pasta"
-                                    DataLabels="True"
-                                    FontSize="18"
-                                    Values="56" />
-                                <wpf:PieSeries
-                                    Title="Cheese"
-                                    DataLabels="True"
-                                    FontSize="18"
-                                    Values="22" />
-                                <wpf:PieSeries
-                                    Title="Desert"
-                                    DataLabels="True"
-                                    FontSize="18"
-                                    Values="11" />
-                            </wpf:PieChart.Series>
-                        </wpf:PieChart>
+                            LegendLocation="Right"
+                            Series="{Binding GoodsGroupSeries}" />
 
                         <Grid
                             Grid.Row="1"
@@ -245,7 +223,7 @@
                                     Text="{Binding Source={StaticResource langHelper}, Path=[lang.Search]}" />
                                 <ComboBox
                                     x:Name="OutlinedComboBox"
-                                    Width="256"
+                                    Width="180"
                                     materialDesign:HintAssist.Hint="{Binding Source={StaticResource langHelper}, Path=[lang.ByMonth]}"
                                     FontSize="18"
                                     ItemsSource="{Binding Months}"
@@ -258,11 +236,15 @@
                                     </b:Interaction.Triggers>
                                 </ComboBox>
                             </StackPanel>
-                            <wpf:CartesianChart Grid.Row="1">
+                            <wpf:CartesianChart Grid.Row="1"  DataClickCommand="{Binding ColumnClickedCommand}">
                                 <wpf:CartesianChart.Series>
                                     <wpf:ColumnSeries
                                         Title="{Binding Source={StaticResource langHelper}, Path=[lang.Sales]}"
+                                        Margin="0"
+                                        ColumnPadding="0"
+                                        DataLabels="True"
                                         Fill="ForestGreen"
+                                        Foreground="OrangeRed"
                                         Values="{Binding ColumnValues}" />
                                 </wpf:CartesianChart.Series>
                                 <wpf:CartesianChart.AxisX>
@@ -273,7 +255,7 @@
                                     </wpf:Axis>
                                 </wpf:CartesianChart.AxisX>
                                 <wpf:CartesianChart.AxisY>
-                                    <wpf:Axis Labels="{Binding MonthDataValues.Values}" />
+                                    <wpf:Axis LabelFormatter="{Binding MoneyLabelFormatter}" Labels="{Binding MonthDataValues.Values}" />
                                 </wpf:CartesianChart.AxisY>
                             </wpf:CartesianChart>
                         </Grid>

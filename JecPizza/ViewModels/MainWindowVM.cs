@@ -14,6 +14,7 @@ using JecPizza.Services;
 using JecPizza.ViewModels.Base;
 using JecPizza.Views.Dialogs;
 using LiveCharts;
+using LiveCharts.Wpf;
 using LocalizatorHelper;
 
 namespace JecPizza.ViewModels
@@ -32,6 +33,25 @@ namespace JecPizza.ViewModels
 
         #region Properties
 
+        #region SeriesCollection : SeriesCollection - Goods Group
+
+        /// <summary>Goods Group</summary>
+        private SeriesCollection _SeriesCollection;
+
+        /// <summary>Goods Group Series</summary>
+        public SeriesCollection GoodsGroupSeries { get => _SeriesCollection; set => Set(ref _SeriesCollection, value); }
+
+        #endregion
+
+        #region MoneyLabelFormater : Func<double,string> - Chart Money label Formater
+
+        /// <summary>Chart Money label Formater</summary>
+        private Func<double, string> _MoneyLabelFormatter;
+
+        /// <summary>Chart Money label Formater</summary>
+        public Func<double, string> MoneyLabelFormatter { get => _MoneyLabelFormatter; set => Set(ref _MoneyLabelFormatter, value); }
+
+        #endregion
 
         #region Months : List<string> - Months Item for Combo Box
 
@@ -235,6 +255,8 @@ namespace JecPizza.ViewModels
         public ICommand UpdateReserveTableCommand { get; set; }
         public ICommand SetBudgetCommand { get; set; }
         public ICommand MonthChangedCommand { get; set; }
+        public ICommand ColumnClickedCommand { get; set; }
+
 
         #endregion
 
@@ -256,9 +278,10 @@ namespace JecPizza.ViewModels
             rcv.Source = ReservationServices.GetAllReserve();
 
 
+
             #region Properties
 
-
+            GoodsGroupSeries = new SeriesCollection();
             Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
             SelectedMonthIndex = 0;
 
@@ -266,8 +289,32 @@ namespace JecPizza.ViewModels
             ColumnValues = new ChartValues<int>(MonthDataValues.Values);
             Dates = new List<string>();
 
+
             foreach (DateTime dt in MonthDataValues.Keys)
                 Dates.Add(dt.Date.ToString("MM/dd", CultureInfo.InvariantCulture) ?? "0");
+
+            var temp = PurchaseDeliveryService.GetTodaysPercentageOfGoods();
+
+            if (temp != null)
+            {
+                double tempSumVal = temp.Values.Sum();
+
+                Func<ChartPoint, string> ShowLabel = cp => $"{cp.Y} ({cp.Y / tempSumVal:p1})";
+
+
+
+                foreach ((string key, int value) in temp)
+                {
+                    GoodsGroupSeries.Add(new PieSeries()
+                    {
+                        Title = key,
+                        Values = new ChartValues<int>() { value },
+                        DataLabels = true,
+                        FontSize = 18,
+                        LabelPoint = ShowLabel
+                    });
+                }
+            }
 
 
             IsDialogOpen = false;
@@ -279,6 +326,8 @@ namespace JecPizza.ViewModels
             ReserveCollection.Refresh();
 
             Label = ShowLabelFormat;
+
+            MoneyLabelFormatter = MoneyFormater;
 
             Budget = Properties.Settings.Default.Buget;
 
@@ -292,16 +341,16 @@ namespace JecPizza.ViewModels
             CloseWindowCommand = new RellayCommand(p => App.GetActiveWindow.Close());
 
             ChangeLanguageCommand = new RellayCommand(p =>
-            {
-                ResourceManagerService.ChangeLocale(p?.ToString() ?? "en-US");
-                Properties.Settings.Default["Language"] = p?.ToString() ?? "en-US";
-                Properties.Settings.Default.Save();
-                Properties.Settings.Default.Reload();
+                    {
+                        ResourceManagerService.ChangeLocale(p?.ToString() ?? "en-US");
+                        Properties.Settings.Default["Language"] = p?.ToString() ?? "en-US";
+                        Properties.Settings.Default.Save();
+                        Properties.Settings.Default.Reload();
 
-                Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
-                SelectedMonthIndex = 0;
+                        Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
+                        SelectedMonthIndex = 0;
 
-            }, p => !Equals(p?.ToString() ?? "us-US", Properties.Settings.Default.Language));
+                    }, p => !Equals(p?.ToString() ?? "us-US", Properties.Settings.Default.Language));
 
             OpenEditGoodsCommand = new RellayCommand(
                 p =>
@@ -335,13 +384,54 @@ namespace JecPizza.ViewModels
 
             MonthChangedCommand = new RellayCommand(OnSelectionMonthChanged);
 
+            ColumnClickedCommand = new RellayCommand(OnColumnClicked);
+
             #endregion
         }
 
 
 
-
         #region Handlers
+
+        private void OnColumnClicked(object Obj)
+        {
+            if (Obj is ChartPoint chart_point)
+            {
+
+                string data = chart_point.SeriesView.Model.CurrentXAxis.Labels[chart_point.Key];
+                GoodsGroupSeries.Clear();
+
+                var temp = PurchaseDeliveryService.GetTodaysPercentageOfGoods(data);
+
+                if (temp != null)
+                {
+                    double tempSumVal = temp.Values.Sum();
+
+                    string ShowLabel(ChartPoint cp) => $"{cp.Y} ({cp.Y / tempSumVal:p1})";
+
+
+
+                    foreach ((string key, int value) in temp)
+                    {
+                        GoodsGroupSeries.Add(
+                            new PieSeries()
+                            {
+                                Title = key,
+                                Values = new ChartValues<int>() { value },
+                                DataLabels = true,
+                                FontSize = 18,
+                                LabelPoint = ShowLabel
+                            });
+                    }
+                }
+            }
+
+        }
+
+        private string MoneyFormater(double Arg)
+        {
+            return Arg.ToString("## '円'");
+        }
 
         private void OnSelectionMonthChanged(object Obj)
         {
@@ -372,7 +462,12 @@ namespace JecPizza.ViewModels
             IsDialogOpen = true;
         }
 
-        private string ShowLabelFormat(double value) => $"{Math.Floor(TodaysTotalSales),10}%" + $"\n{Math.Floor(TodaysTotalSales * Budget / 100)}円 / {Budget}円";
+        private string ShowLabelFormat(double value)
+        {
+            string temp = $"\n{Math.Floor(TodaysTotalSales * Budget / 100)}円 / {Budget}円";
+            return $"{Math.Floor(TodaysTotalSales).ToString(CultureInfo.InvariantCulture).PadLeft(temp.Length - 1)}%"
+                   + temp;
+        }
 
 
         private void OnReserveDateUpdate(object Obj)
