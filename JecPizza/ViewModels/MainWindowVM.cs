@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -26,6 +25,8 @@ namespace JecPizza.ViewModels
         public PurchaseDeliveryService PurchaseDeliveryService { get; set; }
         public readonly CollectionViewSource gcv = new CollectionViewSource();
         public readonly CollectionViewSource rcv = new CollectionViewSource();
+        public readonly CollectionViewSource dcv = new CollectionViewSource();
+        public readonly CollectionViewSource acv = new CollectionViewSource();
         public bool IsAscending { get; set; } = true;
 
 
@@ -217,13 +218,33 @@ namespace JecPizza.ViewModels
 
         #endregion
 
-        #region ReserveCollection : ICollectionView - Reservation Data
+        #region ReserveCollection : ICollectionView - Reservations Data
 
-        /// <summary>Reservation Data</summary>
+        /// <summary>Reservations Data</summary>
         private ICollectionView _ReserveCollection;
 
-        /// <summary>Reservation Data</summary>
+        /// <summary>Reservations Data</summary>
         public ICollectionView ReserveCollection { get => _ReserveCollection; set => Set(ref _ReserveCollection, value); }
+
+        #endregion
+
+        #region DelivartCollection : ICollectionView - Delivaries Data
+
+        /// <summary>Delivaries Data</summary>
+        private ICollectionView _DeliveryCollection;
+
+        /// <summary>Delivaries Data</summary>
+        public ICollectionView DeliveryCollection { get => _DeliveryCollection; set => Set(ref _DeliveryCollection, value); }
+
+        #endregion
+
+        #region AccountCollection : ICollectionView - Accounts Data
+
+        /// <summary>Accounts Data</summary>
+        private ICollectionView _AccountCollection;
+
+        /// <summary>Accounts Data</summary>
+        public ICollectionView AccountCollection { get => _AccountCollection; set => Set(ref _AccountCollection, value); }
 
         #endregion
 
@@ -273,13 +294,14 @@ namespace JecPizza.ViewModels
             ReservationServices = new ReservationService();
             PurchaseDeliveryService = new PurchaseDeliveryService();
 
-            gcv.Filter += OnGoodsTableFilter;
-            gcv.Source = GoodsService.GetAllGoods();
-            rcv.Source = ReservationServices.GetAllReserve();
-
 
 
             #region Properties
+
+            gcv.Filter += OnGoodsTableFilter;
+            gcv.Source = GoodsService.GetAllGoods();
+            rcv.Source = ReservationServices.GetAllReserve();
+            dcv.Source = PurchaseDeliveryService.GetAllDeliveries();
 
             GoodsGroupSeries = new SeriesCollection();
             Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
@@ -298,22 +320,15 @@ namespace JecPizza.ViewModels
             if (temp != null)
             {
                 double tempSumVal = temp.Values.Sum();
-
-                Func<ChartPoint, string> ShowLabel = cp => $"{cp.Y} ({cp.Y / tempSumVal:p1})";
-
-
-
                 foreach ((string key, int value) in temp)
-                {
                     GoodsGroupSeries.Add(new PieSeries()
                     {
                         Title = key,
                         Values = new ChartValues<int>() { value },
                         DataLabels = true,
                         FontSize = 18,
-                        LabelPoint = ShowLabel
+                        LabelPoint = cp => $"{cp.Y} ({cp.Y / tempSumVal:p1})"
                     });
-                }
             }
 
 
@@ -324,6 +339,10 @@ namespace JecPizza.ViewModels
 
             ReserveCollection = rcv.View;
             ReserveCollection.Refresh();
+
+            DeliveryCollection = dcv.View;
+            DeliveryCollection.Refresh();
+
 
             Label = ShowLabelFormat;
 
@@ -406,13 +425,7 @@ namespace JecPizza.ViewModels
                 if (temp != null)
                 {
                     double tempSumVal = temp.Values.Sum();
-
-                    string ShowLabel(ChartPoint cp) => $"{cp.Y} ({cp.Y / tempSumVal:p1})";
-
-
-
                     foreach ((string key, int value) in temp)
-                    {
                         GoodsGroupSeries.Add(
                             new PieSeries()
                             {
@@ -420,9 +433,8 @@ namespace JecPizza.ViewModels
                                 Values = new ChartValues<int>() { value },
                                 DataLabels = true,
                                 FontSize = 18,
-                                LabelPoint = ShowLabel
+                                LabelPoint = cp => $"{cp.Y} ({cp.Y / tempSumVal:p1})"
                             });
-                    }
                 }
             }
 
@@ -451,7 +463,6 @@ namespace JecPizza.ViewModels
 
         }
 
-
         private void OnSetBudget(object Obj)
         {
             var sbg_dialog = new SetBudgetDialog()
@@ -468,7 +479,6 @@ namespace JecPizza.ViewModels
             return $"{Math.Floor(TodaysTotalSales).ToString(CultureInfo.InvariantCulture).PadLeft(temp.Length - 1)}%"
                    + temp;
         }
-
 
         private void OnReserveDateUpdate(object Obj)
         {
@@ -533,7 +543,6 @@ namespace JecPizza.ViewModels
             IsDialogOpen = true;
         }
 
-
         private void OnGoodsTableFilter(object sender, FilterEventArgs e)
         {
             if (!(e.Item is Goods g))
@@ -548,7 +557,6 @@ namespace JecPizza.ViewModels
 
             e.Accepted = false;
         }
-
 
         private void OnSortCollection(object Obj)
         {

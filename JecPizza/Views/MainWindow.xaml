@@ -236,7 +236,7 @@
                                     </b:Interaction.Triggers>
                                 </ComboBox>
                             </StackPanel>
-                            <wpf:CartesianChart Grid.Row="1"  DataClickCommand="{Binding ColumnClickedCommand}">
+                            <wpf:CartesianChart Grid.Row="1" DataClickCommand="{Binding ColumnClickedCommand}">
                                 <wpf:CartesianChart.Series>
                                     <wpf:ColumnSeries
                                         Title="{Binding Source={StaticResource langHelper}, Path=[lang.Sales]}"
@@ -678,6 +678,32 @@
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </TabItem.Header>
+
+                <materialDesign:DialogHost
+                    CloseOnClickAway="True"
+                    DialogContent="{Binding DialogContent, UpdateSourceTrigger=PropertyChanged}"
+                    Identifier="rootHost"
+                    IsOpen="{Binding IsDialogOpen}"
+                    OverlayBackground="{StaticResource PrimaryHueDarkBrush}">
+                    <materialDesign:DialogHost.ContextMenu>
+                        <ContextMenu Width="180" VerticalContentAlignment="Center">
+                            <MenuItem Header="Info" />
+                        </ContextMenu>
+                    </materialDesign:DialogHost.ContextMenu>
+
+                    <ListView ItemsSource="{Binding DeliveryCollection}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock FontSize="18" Text="{Binding UserName}" />
+                                    <Separator Width="auto" />
+                                    <TextBlock FontSize="18" Text="{Binding Address}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </materialDesign:DialogHost>
             </TabItem>
             <TabItem
                 Width="120"

@@ -15,7 +15,7 @@ namespace JecPizza.Services
         {
             DataSet ds = new DataSet();
 
-            string sql = "Select * from Delivery";
+            string sql = "Select M.Username, M.Tel,  Delivery.* from Delivery join Purchase as P on Delivery.PurchaseId = P.PurchaseId join Member as M on P.MemberId = M.MemberId";
 
             SqlDataAdapter adapter = new SqlDataAdapter(sql, Connection);
 
@@ -29,7 +29,9 @@ namespace JecPizza.Services
                 yield return new Delivery()
                 {
                     DeliveryId = row["DeliveryId"].ToString(),
-                    MemberId = row["MemberId"].ToString(),
+                    UserName = row["Username"].ToString(),
+                    UserPhone = row["Tel"].ToString(),
+                    PurchaseId = row["PurchaseId"].ToString(),
                     Address = row["Address"].ToString(),
                     DeliveryDate = DateTime.Parse(row["DeliveryDate"].ToString()!, CultureInfo.InvariantCulture)
                 };
