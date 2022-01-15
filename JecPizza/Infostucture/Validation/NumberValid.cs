@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace JecPizza.Infostructure.Validation
+namespace JecPizza.Infostucture.Validation
 {
     public class NumberValid : ValidationRule
     {

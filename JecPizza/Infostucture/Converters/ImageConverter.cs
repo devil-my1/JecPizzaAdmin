@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace JecPizza.Infostructure.Converters
+namespace JecPizza.Infostucture.Converters
 {
     public class ImageConverter : IValueConverter
     {

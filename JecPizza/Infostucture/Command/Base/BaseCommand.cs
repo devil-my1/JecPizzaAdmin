@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace JecPizza.Infostructure.Command.Base
+namespace JecPizza.Infostucture.Command.Base
 {
     public abstract class BaseCommand: ICommand
     {

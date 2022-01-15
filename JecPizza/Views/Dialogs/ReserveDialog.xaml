@@ -7,7 +7,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tool="http://schemas.xceed.com/wpf/xaml/toolkit"
-    xmlns:validation="clr-namespace:JecPizza.Infostructure.Validation"
+    xmlns:validation="clr-namespace:JecPizza.Infostucture.Validation"
     Width="450"
     mc:Ignorable="d">
     <Grid Background="#123">
@@ -77,7 +77,7 @@
                             UpdateSourceTrigger="PropertyChanged"
                             ValidatesOnExceptions="True">
                             <Binding.ValidationRules>
-                                <domain:FutureDateValidationRule xmlns:domain="clr-namespace:JecPizza.Infostructure.Validation" ValidatesOnTargetUpdated="True" />
+                                <validation:FutureDateValidationRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
                         </Binding>
                     </DatePicker.SelectedDate>

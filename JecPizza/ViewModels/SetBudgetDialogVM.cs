@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using JecPizza.Infostructure.Command;
+using JecPizza.Infostucture.Command;
 using JecPizza.ViewModels.Base;
 
 namespace JecPizza.ViewModels

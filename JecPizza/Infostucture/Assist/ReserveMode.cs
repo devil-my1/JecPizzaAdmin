@@ -1,4 +1,4 @@
-﻿namespace JecPizza.Infostructure.Assist
+﻿namespace JecPizza.Infostucture.Assist
 {
     public enum ReserveMode
     {

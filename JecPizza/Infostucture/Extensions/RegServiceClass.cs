@@ -1,7 +1,7 @@
 ﻿using JecPizza.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JecPizza.Infostructure.Extensions
+namespace JecPizza.Infostucture.Extensions
 {
     public static class RegServiceClass
     {

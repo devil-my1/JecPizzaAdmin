@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Windows.Input;
-using JecPizza.Infostructure.Command.Base;
+using JecPizza.Infostucture.Command.Base;
 
-namespace JecPizza.Infostructure.Command
+namespace JecPizza.Infostucture.Command
 {
     public class RellayCommand : BaseCommand
     {

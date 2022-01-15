@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using JecPizza.Infostructure.Command;
+using JecPizza.Infostucture.Command;
 using JecPizza.Models;
 using JecPizza.ViewModels.Base;
 using Microsoft.Win32;
