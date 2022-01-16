@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using JecPizza.Infostucture.Assist;
 using JecPizza.Infostucture.Command;
 using JecPizza.Models;
@@ -20,13 +25,16 @@ namespace JecPizza.ViewModels
 {
     public class MainWindowVM : BaseViewModel
     {
+        private static object locker = new object();
         public GoodsService GoodsService { get; set; }
         public ReservationService ReservationServices { get; set; }
         public PurchaseDeliveryService PurchaseDeliveryService { get; set; }
+        public AccountService AccountService { get; set; }
         public readonly CollectionViewSource gcv = new CollectionViewSource();
         public readonly CollectionViewSource rcv = new CollectionViewSource();
         public readonly CollectionViewSource dcv = new CollectionViewSource();
         public readonly CollectionViewSource acv = new CollectionViewSource();
+
         public bool IsAscending { get; set; } = true;
 
 
@@ -57,10 +65,10 @@ namespace JecPizza.ViewModels
         #region Months : List<string> - Months Item for Combo Box
 
         /// <summary>Months Item for Combo Box</summary>
-        private List<string> _Months;
+        private ObservableCollection<string> _Months;
 
         /// <summary>Months Item for Combo Box</summary>
-        public List<string> Months { get => _Months; set => Set(ref _Months, value); }
+        public ObservableCollection<string> Months { get => _Months; set => Set(ref _Months, value); }
 
         #endregion
 
@@ -258,6 +266,74 @@ namespace JecPizza.ViewModels
 
         #endregion
 
+        #region SelectedAccount : Member - Selected Account itme
+
+        /// <summary>Selected Account itme</summary>
+        private Member _SelectedAccount;
+
+        /// <summary>Selected Account itme</summary>
+        public Member SelectedAccount
+        {
+            get => _SelectedAccount;
+            set
+            {
+                Set(ref _SelectedAccount, value);
+                ShowAccountInfo = (SelectedAccount != null) ? Visibility.Visible : Visibility.Collapsed;
+
+            }
+
+        }
+
+        #endregion
+
+        #region SearchAccount : string - Search Account in Account Group Box
+
+        /// <summary>Search Account in Account Group Box</summary>
+        private string _SearchAccount;
+
+        /// <summary>Search Account in Account Group Box</summary>
+        public string SearchAccount
+        {
+            get => _SearchAccount;
+            set
+            {
+                Set(ref _SearchAccount, value);
+                acv.View.Refresh();
+            }
+        }
+
+        #endregion
+
+        #region ShowAccountInfo : Visibility - Shwing Account Info while Account is selected
+
+        /// <summary>Shwing Account Info while Account is selected</summary>
+        private Visibility _ShowAccountInfo = Visibility.Collapsed;
+
+        /// <summary>Shwing Account Info while Account is selected</summary>
+        public Visibility ShowAccountInfo { get => _ShowAccountInfo; set => Set(ref _ShowAccountInfo, value); }
+
+        #endregion
+
+        #region ShowMultiplyAccountInfo : Visibility - Mlply Acc View
+
+        /// <summary>Mlply Acc View</summary>
+        private Visibility _ShowMultiplyAccountInfo = Visibility.Collapsed;
+
+        /// <summary>Mlply Acc View</summary>
+        public Visibility ShowMultiplyAccountInfo { get => _ShowMultiplyAccountInfo; set => Set(ref _ShowMultiplyAccountInfo, value); }
+
+        #endregion
+
+        #region SelectedAccoutes : IList<Member> - Multiply selectted Accounts
+
+        /// <summary>Multiply selectted Accounts</summary>
+        private IList<Member> _SelectedAccounts;
+
+        /// <summary>Multiply selectted Accounts</summary>
+        public IList<Member> SelectedAccounts { get => _SelectedAccounts; set => Set(ref _SelectedAccounts, value); }
+
+        #endregion
+
         #endregion
 
 
@@ -277,7 +353,8 @@ namespace JecPizza.ViewModels
         public ICommand SetBudgetCommand { get; set; }
         public ICommand MonthChangedCommand { get; set; }
         public ICommand ColumnClickedCommand { get; set; }
-
+        public ICommand AccountMultipleSelectedCommand { get; set; }
+        public ICommand LoadProductsCommand { get; set; }
 
         #endregion
 
@@ -286,6 +363,10 @@ namespace JecPizza.ViewModels
 
         public MainWindowVM()
         {
+            OverlayVM.GetInstance().Show = (str) =>
+            {
+                OverlayVM.GetInstance().Text = str;
+            };
 
             ResourceManagerService.RegisterManager("lang", Content.Languages.Language.ResourceManager);
             ResourceManagerService.ChangeLocale(Properties.Settings.Default.Language);
@@ -293,18 +374,22 @@ namespace JecPizza.ViewModels
             GoodsService = new GoodsService();
             ReservationServices = new ReservationService();
             PurchaseDeliveryService = new PurchaseDeliveryService();
-
+            AccountService = new AccountService();
 
 
             #region Properties
 
             gcv.Filter += OnGoodsTableFilter;
-            gcv.Source = GoodsService.GetAllGoods();
+
+
             rcv.Source = ReservationServices.GetAllReserve();
             dcv.Source = PurchaseDeliveryService.GetAllDeliveries();
+            acv.Filter += OnAccountFilter;
+            acv.Source = AccountService.GetMembers();
 
             GoodsGroupSeries = new SeriesCollection();
-            Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
+            Months = new ObservableCollection<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
+            BindingOperations.EnableCollectionSynchronization(Months, new object());
             SelectedMonthIndex = 0;
 
             MonthDataValues = PurchaseDeliveryService.GetTotalSalesByMonth(1);
@@ -331,17 +416,19 @@ namespace JecPizza.ViewModels
                     });
             }
 
+            ShowAccountInfo = Visibility.Collapsed;
 
             IsDialogOpen = false;
 
-            GoodsCollection = gcv.View;
-            GoodsCollection.Refresh();
 
             ReserveCollection = rcv.View;
             ReserveCollection.Refresh();
 
             DeliveryCollection = dcv.View;
             DeliveryCollection.Refresh();
+
+            AccountCollection = acv.View;
+            AccountCollection.Refresh();
 
 
             Label = ShowLabelFormat;
@@ -366,7 +453,7 @@ namespace JecPizza.ViewModels
                         Properties.Settings.Default.Save();
                         Properties.Settings.Default.Reload();
 
-                        Months = new List<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
+                        Months = new ObservableCollection<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
                         SelectedMonthIndex = 0;
 
                     }, p => !Equals(p?.ToString() ?? "us-US", Properties.Settings.Default.Language));
@@ -405,12 +492,70 @@ namespace JecPizza.ViewModels
 
             ColumnClickedCommand = new RellayCommand(OnColumnClicked);
 
+            AccountMultipleSelectedCommand = new RellayCommand(OnMultipleSelectedAccount);
+
+            LoadProductsCommand = new RellayCommand(OnLoadProducts, p => GoodsCollection == null);
+
             #endregion
         }
 
 
 
+
         #region Handlers
+
+        private async void OnLoadProducts(object Obj)
+        {
+            ObservableCollection<Goods> temp_goods_list = new ObservableCollection<Goods>();
+
+            await Task.Factory.StartNew(
+                () =>
+                {
+                    OverlayVM.GetInstance().Show("Loading the Goods Info...\nPlease wait a while!");
+
+
+                    foreach (Goods goods in GoodsService.GetAllGoods())
+                        temp_goods_list.Add(goods);
+
+                    Task.Delay(500).Wait();
+
+                    OverlayVM.GetInstance().Close();
+                });
+
+            gcv.Source = temp_goods_list;
+            GoodsCollection = gcv?.View;
+        }
+
+        private void OnMultipleSelectedAccount(object Obj)
+        {
+            if (Obj is IList accounts && accounts.Count > 1)
+            {
+                SelectedAccounts = new List<Member>(accounts.OfType<Member>());
+
+                ShowAccountInfo = Visibility.Collapsed;
+                ShowMultiplyAccountInfo = Visibility.Visible;
+            }
+            else
+            {
+                ShowAccountInfo = Visibility.Visible;
+                ShowMultiplyAccountInfo = Visibility.Collapsed;
+            }
+        }
+
+        private void OnAccountFilter(object Sender, FilterEventArgs e)
+        {
+            if (!(e.Item is Member g))
+            {
+                e.Accepted = false;
+                return;
+            }
+
+            e.Accepted = string.IsNullOrWhiteSpace(SearchAccount) switch
+            {
+                false when !g.UserName.Contains(SearchAccount, StringComparison.OrdinalIgnoreCase) => false,
+                _ => e.Accepted
+            };
+        }
 
         private void OnColumnClicked(object Obj)
         {
@@ -551,11 +696,11 @@ namespace JecPizza.ViewModels
                 return;
             }
 
-
-            if (string.IsNullOrWhiteSpace(Search)) return;
-            if (g.Name.Contains(Search, StringComparison.OrdinalIgnoreCase)) return;
-
-            e.Accepted = false;
+            e.Accepted = string.IsNullOrWhiteSpace(Search) switch
+            {
+                false when !g.Name.Contains(Search, StringComparison.OrdinalIgnoreCase) => false,
+                _ => e.Accepted
+            };
         }
 
         private void OnSortCollection(object Obj)
@@ -579,3 +724,7 @@ namespace JecPizza.ViewModels
 
     }
 }
+//todo Send Mail Dialog
+//todo MailTemplate and Saver Tempaltes
+//todo CSV Products reader
+//todo 

@@ -1,4 +1,6 @@
-﻿namespace JecPizza.Models
+﻿using System;
+
+namespace JecPizza.Models
 {
     public class Member
     {
@@ -12,5 +14,7 @@
         public string Image { get; set; }
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
+        public DateTime RegisterDate { get; set; }
+        public DateTime Dob { get; set; }
     }
 }
