@@ -5,12 +5,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 using JecPizza.Infostucture.Assist;
 using JecPizza.Infostucture.Command;
 using JecPizza.Models;
@@ -41,6 +39,26 @@ namespace JecPizza.ViewModels
 
 
         #region Properties
+
+        #region ProgressMaxValue : int - Loading progress Max Value
+
+        /// <summary>Loading progress Max Value</summary>
+        private int _ProgressMaxValue;
+
+        /// <summary>Loading progress Max Value</summary>
+        public int ProgressMaxValue { get => _ProgressMaxValue; set => Set(ref _ProgressMaxValue, value); }
+
+        #endregion
+
+        #region ProgressValue : double - Loading Progress Current Value
+
+        /// <summary>Loading Progress Current Value</summary>
+        private double _ProgressValue;
+
+        /// <summary>Loading Progress Current Value</summary>
+        public double ProgressValue { get => _ProgressValue; set => Set(ref _ProgressValue, value); }
+
+        #endregion
 
         #region SeriesCollection : SeriesCollection - Goods Group
 
@@ -379,6 +397,8 @@ namespace JecPizza.ViewModels
 
             #region Properties
 
+            ProgressMaxValue = 1;
+
             gcv.Filter += OnGoodsTableFilter;
 
 
@@ -511,13 +531,21 @@ namespace JecPizza.ViewModels
             await Task.Factory.StartNew(
                 () =>
                 {
+                    double i = 1;
                     OverlayVM.GetInstance().Show("Loading the Goods Info...\nPlease wait a while!");
-
+                    int cntItems = GoodsService.GetAllGoods().Count();
 
                     foreach (Goods goods in GoodsService.GetAllGoods())
+                    {
                         temp_goods_list.Add(goods);
 
-                    Task.Delay(500).Wait();
+                        ProgressValue = i / cntItems;
+                        i++;
+                        Task.Delay(50).Wait();
+
+                    }
+
+
 
                     OverlayVM.GetInstance().Close();
                 });

@@ -8,6 +8,7 @@
     xmlns:dialogs="clr-namespace:JecPizza.Views.Dialogs"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:JecPizza.Models"
     xmlns:overlay="clr-namespace:JecPizza.Services"
     xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     Title="{Binding Source={StaticResource langHelper}, Path=[lang.Title]}"
@@ -493,20 +494,13 @@
                                     <MenuItem Command="{Binding OpenEditGoodsCommand}" Header="{Binding Source={StaticResource langHelper}, Path=[lang.Edit]}" />
                                 </ContextMenu>
                             </ListBox.ContextMenu>
-                            <b:Interaction.Triggers>
-                                <b:EventTrigger EventName="SelectionChanged">
-                                    <b:EventTrigger.Actions>
-                                        <b:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=gBox}" />
-                                    </b:EventTrigger.Actions>
-                                </b:EventTrigger>
-                            </b:Interaction.Triggers>
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
                                 </ItemsPanelTemplate>
                             </ListBox.ItemsPanel>
                             <ListBox.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate DataType="{x:Type model:Goods}">
                                     <materialDesign:Card
                                         Margin="10,10,10,10"
                                         materialDesign:ShadowAssist.ShadowDepth="Depth5"
@@ -533,7 +527,7 @@
                                                     Margin="10,0,0,0"
                                                     DockPanel.Dock="Left"
                                                     FontSize="15"
-                                                    Text="Is Recommended : " />
+                                                    Text="Recommended : " />
                                                 <CheckBox
                                                     Margin="0,0,5,0"
                                                     DockPanel.Dock="Right"
@@ -546,7 +540,7 @@
                                                     Margin="10,0,0,0"
                                                     DockPanel.Dock="Left"
                                                     FontSize="15"
-                                                    Text="Is New : " />
+                                                    Text="New : " />
                                                 <CheckBox
                                                     Margin="0,0,5,0"
                                                     DockPanel.Dock="Right"
@@ -1028,7 +1022,7 @@
                         <TextBlock
                             Name="overlayText"
                             FontFamily="Castellar"
-                            FontSize="25"
+                            FontSize="22"
                             FontStretch="UltraCondensed"
                             FontStyle="Normal"
                             FontWeight="DemiBold"
@@ -1043,8 +1037,9 @@
                             Background="{StaticResource PrimaryHueDarkBrush}"
                             BorderThickness="5"
                             Foreground="{StaticResource SecondaryHueMidBrush}"
-                            IsIndeterminate="True"
-                            Style="{StaticResource MaterialDesignCircularProgressBar}" />
+                            Maximum="{Binding ProgressMaxValue}"
+                            Style="{StaticResource MaterialDesignCircularProgressBar}"
+                            Value="{Binding ProgressValue}" />
 
 
                     </StackPanel>
