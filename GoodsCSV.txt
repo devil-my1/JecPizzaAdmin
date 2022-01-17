@@ -1,0 +1,4 @@
+5112,	Estared,	2800,	PI,	15.jpg,	1,	1,	1
+6321,	SunBrrutta,	1900,	CH,	9.jpg,	1,	1,	1
+4637,	SnowBrutta,	2100,	CH,	4.jpg,	1,	1,	1
+9805,	VegPizza,	1600,	PI,	12.jpg,	1,	1,	1

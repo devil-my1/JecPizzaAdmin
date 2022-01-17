@@ -174,9 +174,6 @@
   <data name="File" xml:space="preserve">
     <value>_Файл</value>
   </data>
-  <data name="Food" xml:space="preserve">
-    <value>Меню Блюд</value>
-  </data>
   <data name="GName" xml:space="preserve">
     <value>Имя Продукта</value>
   </data>
@@ -202,7 +199,7 @@
     <value>Уведомления</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>_Открыть</value>
+    <value>_Открыть CSV Файл Продуктов</value>
   </data>
   <data name="Pass" xml:space="preserve">
     <value>Пароль</value>

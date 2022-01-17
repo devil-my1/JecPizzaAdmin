@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,7 @@ using JecPizza.Views.Dialogs;
 using LiveCharts;
 using LiveCharts.Wpf;
 using LocalizatorHelper;
+using Microsoft.Win32;
 
 namespace JecPizza.ViewModels
 {
@@ -373,6 +375,8 @@ namespace JecPizza.ViewModels
         public ICommand ColumnClickedCommand { get; set; }
         public ICommand AccountMultipleSelectedCommand { get; set; }
         public ICommand LoadProductsCommand { get; set; }
+        public ICommand GoodsCsvReaderCommand { get; set; }
+
 
         #endregion
 
@@ -466,29 +470,9 @@ namespace JecPizza.ViewModels
 
             CloseWindowCommand = new RellayCommand(p => App.GetActiveWindow.Close());
 
-            ChangeLanguageCommand = new RellayCommand(p =>
-                    {
-                        ResourceManagerService.ChangeLocale(p?.ToString() ?? "en-US");
-                        Properties.Settings.Default["Language"] = p?.ToString() ?? "en-US";
-                        Properties.Settings.Default.Save();
-                        Properties.Settings.Default.Reload();
+            ChangeLanguageCommand = new RellayCommand(OnLanguageChanged, p => !Equals(p?.ToString() ?? "us-US", Properties.Settings.Default.Language));
 
-                        Months = new ObservableCollection<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
-                        SelectedMonthIndex = 0;
-
-                    }, p => !Equals(p?.ToString() ?? "us-US", Properties.Settings.Default.Language));
-
-            OpenEditGoodsCommand = new RellayCommand(
-                p =>
-                {
-                    var edit_dialog = new GoodsEditDialog()
-                    {
-                        DataContext = new GoodsEditDialogVM(this)
-                    };
-
-                    DialogContent = edit_dialog;
-                    IsDialogOpen = true;
-                }, p => CurrentSelectedGoods != null);
+            OpenEditGoodsCommand = new RellayCommand(OnEditGoods, p => CurrentSelectedGoods != null);
 
             AddNewGoodsCommand = new RellayCommand(OnAddNewGoods);
 
@@ -516,13 +500,110 @@ namespace JecPizza.ViewModels
 
             LoadProductsCommand = new RellayCommand(OnLoadProducts, p => GoodsCollection == null);
 
+            GoodsCsvReaderCommand = new RellayCommand(OnGoodsFromCSV);
+
             #endregion
         }
 
 
 
-
         #region Handlers
+
+
+        private async void OnGoodsFromCSV(object Obj)
+        {
+            OpenFileDialog opd = new OpenFileDialog
+            {
+                Multiselect = false,
+                InitialDirectory = Environment.CurrentDirectory,
+                Filter = "Goods CSV File|*.csv;*.txt;"
+            };
+
+
+            if (opd.ShowDialog() != true) return;
+
+            FileStream file = File.Open(opd.FileName, FileMode.Open, FileAccess.Read);
+            List<Goods> goods = new List<Goods>();
+            using (StreamReader reader = new StreamReader(file))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string data = (await reader?.ReadLineAsync());
+                    string[] fileds = data?.Split(',').Select((i, s) => i.Trim('\t')).ToArray();
+
+                    if (fileds?.Length != 8)
+                    {
+                        MessageBox.Show("Not Correct CSV Format!");
+                        return;
+                    }
+                    else
+                    {
+                        goods.Add(new Goods()
+                        {
+                            GoodsId = fileds[0],
+                            Name = fileds[1],
+                            Price = int.Parse(fileds[2]),
+                            GoodsGroupId = fileds[3],
+                            Image = fileds[4],
+                            IsRecommend = fileds[5].Equals("1") ? true : false,
+                            IsNew = fileds[6].Equals("1") ? true : false,
+                            HasTopping = fileds[7].Equals("1") ? true : false
+
+                        });
+                    }
+                }
+
+            }
+
+            var res = MessageBox.Show($"Detected {goods.Count} of Goods.\nWould u like to add it?", "JecPizzaAdmin", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+
+            if (res == MessageBoxResult.Yes)
+            {
+                await Task.Factory.StartNew(
+                    () =>
+                    {
+                        double i = 1;
+                        OverlayVM.GetInstance().Show("Adding the Goods into the Table...\nPlease wait a while!");
+
+                        foreach (Goods good in goods)
+                        {
+                            OverlayVM.GetInstance().Show($"Added the Goods {good.Name}");
+                            ProgressValue = i / goods.Count;
+                            i++;
+                            Task.Delay(1000).Wait();
+                        }
+
+                        GoodsService.InsertRangeGoods(goods);
+
+                        Task.Delay(1000).Wait();
+
+                        OverlayVM.GetInstance().Close();
+                    });
+
+                MessageBox.Show($"{goods.Count} of Goods have been Added");
+            }
+        }
+
+
+        private void OnEditGoods(object p)
+        {
+            var edit_dialog = new GoodsEditDialog() { DataContext = new GoodsEditDialogVM(this) };
+
+            DialogContent = edit_dialog;
+            IsDialogOpen = true;
+        }
+
+        private void OnLanguageChanged(object p)
+        {
+            ResourceManagerService.ChangeLocale(p?.ToString() ?? "en-US");
+            Properties.Settings.Default["Language"] = p?.ToString() ?? "en-US";
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Reload();
+
+            Months = new ObservableCollection<string>(CultureInfo.CurrentCulture.DateTimeFormat.MonthNames.Take(12));
+            SelectedMonthIndex = 0;
+        }
 
         private async void OnLoadProducts(object Obj)
         {
@@ -541,11 +622,9 @@ namespace JecPizza.ViewModels
 
                         ProgressValue = i / cntItems;
                         i++;
-                        Task.Delay(50).Wait();
+                        Task.Delay(100).Wait();
 
                     }
-
-
 
                     OverlayVM.GetInstance().Close();
                 });
@@ -674,7 +753,12 @@ namespace JecPizza.ViewModels
             var res = System.Windows.MessageBox.Show("Delete the Goods Name: " + CurrentSelectedGoods.Name + "?", ResourceManagerService.GetResourceString("lang", "Title"), MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             if (res == MessageBoxResult.Cancel) return;
             GoodsService.DeleteGoods(CurrentSelectedGoods);
-            GoodsCollection.Refresh();
+
+            if (gcv.Source is ObservableCollection<Goods> temp)
+            {
+                temp.Remove(CurrentSelectedGoods);
+                gcv.Source = temp;
+            }
 
         }
 
@@ -755,4 +839,3 @@ namespace JecPizza.ViewModels
 //todo Send Mail Dialog
 //todo MailTemplate and Saver Tempaltes
 //todo CSV Products reader
-//todo 

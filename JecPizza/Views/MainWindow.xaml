@@ -58,7 +58,10 @@
                 Height="auto"
                 Padding="16,4"
                 Header="{Binding Source={StaticResource langHelper}, Path=[lang.File]}">
-                <MenuItem Margin="2" Header="{Binding Source={StaticResource langHelper}, Path=[lang.Open]}" />
+                <MenuItem
+                    Margin="2"
+                    Command="{Binding GoodsCsvReaderCommand}"
+                    Header="{Binding Source={StaticResource langHelper}, Path=[lang.Open]}" />
                 <Separator />
                 <MenuItem
                     Margin="2"

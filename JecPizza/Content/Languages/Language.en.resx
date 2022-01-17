@@ -177,9 +177,6 @@
   <data name="File" xml:space="preserve">
     <value>_File</value>
   </data>
-  <data name="Food" xml:space="preserve">
-    <value>Food Menu</value>
-  </data>
   <data name="GName" xml:space="preserve">
     <value>Goods Name</value>
   </data>
@@ -208,7 +205,7 @@
     <value>Notification</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>_Open</value>
+    <value>_Open Goods CSV File</value>
   </data>
   <data name="Pass" xml:space="preserve">
     <value>Passwrod</value>

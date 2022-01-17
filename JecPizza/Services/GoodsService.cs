@@ -46,8 +46,6 @@ namespace JecPizza.Services
 
             }
 
-
-
         }
 
         public IDictionary<string, string> GetAllGoodsGroup()
@@ -68,7 +66,7 @@ namespace JecPizza.Services
 
             foreach (DataRow row in dt.Rows)
                 ret_dict.Add(row["GroupName"].ToString() ?? "", row["GoodsGroupId"].ToString());
-            
+
 
             Connection.Close();
 
@@ -117,7 +115,7 @@ namespace JecPizza.Services
 
             Connection.Open();
 
-            string sql = @"Update Goods set Name = @name, Price = @price, GoodsGroupId = @goodsGroupId, Image = @image, IsRecommend = @isRec, IsNew = @isNew, HasTopping = @hasTopping where GoodsId = @gId";
+            string sql = "Update Goods set Name = @name, Price = @price, GoodsGroupId = @goodsGroupId, Image = @image, IsRecommend = @isRec, IsNew = @isNew, HasTopping = @hasTopping where GoodsId = @gId";
             SqlCommand cmd = new SqlCommand(sql, Connection);
             cmd.Parameters.AddWithValue("@name", goods.Name);
             cmd.Parameters.AddWithValue("@price", goods.Price);
@@ -141,7 +139,7 @@ namespace JecPizza.Services
 
             Connection.Open();
 
-            string sql = @"Delete from Goods where GoodsId = @gId";
+            string sql = "Delete from Goods where GoodsId = @gId";
 
             SqlCommand cmd = new SqlCommand(sql, Connection);
 
@@ -158,7 +156,7 @@ namespace JecPizza.Services
         {
             bool ret = false;
 
-            Connection.Open();
+
 
             string sql = "Insert into Goods Values(@gId,@name,@price,@goodsGroupId,@image,@isRec,@isNew,@hasTopping)";
             SqlCommand cmd = new SqlCommand(sql, Connection);
@@ -171,9 +169,36 @@ namespace JecPizza.Services
             cmd.Parameters.AddWithValue("@hasTopping", goods.HasTopping);
             cmd.Parameters.AddWithValue("@gId", goods.GoodsId);
 
+            Connection.Open();
             ret = cmd.ExecuteNonQuery() > 0;
-
             Connection.Close();
+
+            return ret;
+        }
+
+        public bool InsertRangeGoods(IEnumerable<Goods> goodsCollection)
+        {
+            bool ret = false;
+
+            foreach (Goods goods in goodsCollection)
+            {
+                string sql = "Insert into Goods Values(@gId,@name,@price,@goodsGroupId,@image,@isRec,@isNew,@hasTopping)";
+                SqlCommand cmd = new SqlCommand(sql, Connection);
+                cmd.Parameters.AddWithValue("@name", goods.Name);
+                cmd.Parameters.AddWithValue("@price", goods.Price);
+                cmd.Parameters.AddWithValue("@goodsGroupId", goods.GoodsGroupId);
+                cmd.Parameters.AddWithValue("@image", goods.Image);
+                cmd.Parameters.AddWithValue("@isRec", goods.IsRecommend);
+                cmd.Parameters.AddWithValue("@isNew", goods.IsNew);
+                cmd.Parameters.AddWithValue("@hasTopping", goods.HasTopping);
+                cmd.Parameters.AddWithValue("@gId", goods.GoodsId);
+
+                Connection.Open();
+                ret = cmd.ExecuteNonQuery() > 0;
+                Connection.Close();
+            }
+
+
 
             return ret;
         }
