@@ -15,6 +15,7 @@
                     PrimaryColor="BlueGrey"
                     SecondaryColor="Teal" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="Content/Styles/WindowStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF518C89" />
             <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFF" />
