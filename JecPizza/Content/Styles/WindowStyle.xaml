@@ -21,11 +21,11 @@
                 TextOptions.TextFormattingMode="Display"
                 TextOptions.TextRenderingMode="ClearType">
                 <DockPanel>
-                    <Grid Background="#FF3FB0DA" DockPanel.Dock="Top">
+                    <Grid Background="#595D5F" DockPanel.Dock="Top">
+                        <i:Interaction.Behaviors>
+                            <behaviors:MoveWindow />
+                        </i:Interaction.Behaviors>
                         <DockPanel Height="30">
-                            <i:Interaction.Behaviors>
-                                <behaviors:MoveWindow />
-                            </i:Interaction.Behaviors>
                             <Image
                                 Margin="-2,-15,0,0"
                                 DockPanel.Dock="Left"
@@ -69,9 +69,10 @@
                                 </Button>
                             </StackPanel>
                             <TextBlock
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontFamily="Papyrus"
-                                FontSize="16"
+                                FontSize="18"
                                 Text="{TemplateBinding Title}" />
                         </DockPanel>
                     </Grid>

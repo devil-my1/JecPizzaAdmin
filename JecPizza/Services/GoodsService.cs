@@ -10,6 +10,8 @@ namespace JecPizza.Services
 {
     public class GoodsService : BaseServiceDOA
     {
+        public event Action<Goods> SendEmailWhenAddGoods;
+
         public IEnumerable<Goods> GetAllGoods()
         {
             DataTable dt = null;
@@ -173,6 +175,9 @@ namespace JecPizza.Services
             ret = cmd.ExecuteNonQuery() > 0;
             Connection.Close();
 
+            if (SendEmailWhenAddGoods != null)
+                SendEmailWhenAddGoods.Invoke(goods);
+
             return ret;
         }
 
@@ -202,5 +207,6 @@ namespace JecPizza.Services
 
             return ret;
         }
+
     }
 }

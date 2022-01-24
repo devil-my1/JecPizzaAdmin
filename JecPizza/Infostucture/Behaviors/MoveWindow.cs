@@ -5,7 +5,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace JecPizza.Infostucture.Behaviors
 {
-    public class MoveWindow : Behavior<DockPanel>
+    public class MoveWindow : Behavior<Grid>
     {
         protected override void OnAttached() => AssociatedObject.MouseLeftButtonDown += OnWindowMove;
 

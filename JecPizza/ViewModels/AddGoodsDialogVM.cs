@@ -81,7 +81,6 @@ namespace JecPizza.ViewModels
             NewGoods.GoodsGroupId = temp;
             var res = mvm.GoodsService.InsertGoods(NewGoods);
 
-            mvm.GoodsCollection.Refresh();
 
             System.Windows.MessageBox.Show(res ? LocalizatorHelper.ResourceManagerService.GetResourceString("lang", "SucAdd") : LocalizatorHelper.ResourceManagerService.GetResourceString("lang", "ErEdit"), "Info", MessageBoxButton.OK, MessageBoxImage.Information);
 

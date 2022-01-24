@@ -9,15 +9,15 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:JecPizza.Models"
-    Style="{Binding Source={StaticResource CustomWindowUI}}"
     xmlns:overlay="clr-namespace:JecPizza.Services"
     xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     Title="{Binding Source={StaticResource langHelper}, Path=[lang.Title]}"
-    Width="1200"
+    Width="1300"
     Height="800"
     MinWidth="1080"
     MinHeight="700"
     DataContext="{Binding MainWindowVm, Source={StaticResource Locator}}"
+    Style="{Binding Source={StaticResource CustomWindowUI}}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -836,6 +836,7 @@
                                 DockPanel.Dock="Bottom">
                                 <Button
                                     Margin="50,10"
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SendEmailCommand}"
                                     Content="{materialDesign:PackIcon Email,
                                                                       Size=30}"
                                     Foreground="Aquamarine"

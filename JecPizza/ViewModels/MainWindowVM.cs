@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -15,6 +18,7 @@ using JecPizza.Infostucture.Command;
 using JecPizza.Models;
 using JecPizza.Services;
 using JecPizza.ViewModels.Base;
+using JecPizza.Views;
 using JecPizza.Views.Dialogs;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -376,7 +380,7 @@ namespace JecPizza.ViewModels
         public ICommand AccountMultipleSelectedCommand { get; set; }
         public ICommand LoadProductsCommand { get; set; }
         public ICommand GoodsCsvReaderCommand { get; set; }
-
+        public ICommand SendEmailCommand { get; set; }
 
         #endregion
 
@@ -394,6 +398,7 @@ namespace JecPizza.ViewModels
             ResourceManagerService.ChangeLocale(Properties.Settings.Default.Language);
 
             GoodsService = new GoodsService();
+            GoodsService.SendEmailWhenAddGoods += GoodsServiceSendEmailWhenAddGoods;
             ReservationServices = new ReservationService();
             PurchaseDeliveryService = new PurchaseDeliveryService();
             AccountService = new AccountService();
@@ -502,8 +507,13 @@ namespace JecPizza.ViewModels
 
             GoodsCsvReaderCommand = new RellayCommand(OnGoodsFromCSV);
 
+            SendEmailCommand = new RellayCommand(OnSendEmail, p => SelectedAccount != null);
+
             #endregion
         }
+
+
+
 
 
 
@@ -583,6 +593,63 @@ namespace JecPizza.ViewModels
 
                 MessageBox.Show($"{goods.Count} of Goods have been Added");
             }
+        }
+
+        private async void OnSendEmail(object p)
+        {
+
+            Process.Start(@"C:\Study\School\JecPizza\JecPizzaTestUI\bin\Debug\netcoreapp3.1\JecPizzaTestUI.exe");
+
+            //MailAddress fromAddress = new MailAddress("jecPizza@gmail.com", "JecPizza");
+            //MailAddress toAddress = new MailAddress("20jn0102@jec.ac.jp", SelectedAccount.UserName);
+            //const string fromPassword = "wvlffbfobhqbdsxi";
+            //string subject = "Test ";
+            //string body = $"Mr {SelectedAccount.UserName}, Jec Pizza is opened!";
+
+            //SmtpClient smtp = new SmtpClient
+            //{
+            //    Host = "smtp.gmail.com",
+            //    Port = 587,
+            //    EnableSsl = true,
+            //    DeliveryMethod = SmtpDeliveryMethod.Network,
+            //    UseDefaultCredentials = false,
+            //    Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+            //    Timeout = 20000
+            //};
+            //smtp.SendCompleted += (sender, args) => Xceed.Wpf.Toolkit.MessageBox.Show(IntPtr.Zero, "Email successfully sent!");
+            //using var message = new MailMessage(fromAddress, toAddress)
+            //{
+            //    Subject = subject,
+            //    Body = body
+            //};
+            //await smtp.SendMailAsync(message);
+
+        }
+        private async void GoodsServiceSendEmailWhenAddGoods(Goods g)
+        {
+            MailAddress fromAddress = new MailAddress("jecPizza@gmail.com", "JecPizza");
+            MailAddress toAddress = new MailAddress("20jn0102@jec.ac.jp", "Fallen");
+            const string fromPassword = "wvlffbfobhqbdsxi";
+            string subject = "新商品登場!!!";
+            string body = $"Fallen 様　本日より、新商品 {g.Name} 登場です。\n本日頼めば30％OFF!このチャンス逃がせずに！！！";
+
+            SmtpClient smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                Timeout = 20000
+            };
+
+            using var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            };
+            await smtp.SendMailAsync(message);
         }
 
 
