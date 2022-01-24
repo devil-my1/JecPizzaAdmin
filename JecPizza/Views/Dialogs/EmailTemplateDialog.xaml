@@ -1,0 +1,213 @@
+﻿<UserControl
+    x:Class="JecPizza.Views.Dialogs.EmailTemplateDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Background="#FF4A6C7C">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <TabControl
+            Name="tb"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalContentAlignment="Center"
+            materialDesign:ColorZoneAssist.Mode="SecondaryDark"
+            materialDesign:NavigationRailAssist.ShowSelectionBackground="True"
+            Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
+            TabStripPlacement="Top">
+            <TabItem
+                Width="400"
+                Height="30"
+                HorizontalAlignment="Center"
+                Background="#FF898989"
+                BorderBrush="Red"
+                Foreground="#DD00FFC5"
+                Header="{materialDesign:PackIcon Kind=NewBox,
+                                                 Size=30}">
+
+                <Grid Background="#FF3D4D55">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="350" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <GroupBox
+                        Name="gb"
+                        Grid.Column="0"
+                        Background="#123">
+                        <GroupBox.Header>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="#FFFB5000"
+                                Text="Email Templates"
+                                TextAlignment="Center" />
+                        </GroupBox.Header>
+                        <DockPanel>
+                            <ListView
+                                Name="lv"
+                                HorizontalContentAlignment="Center"
+                                Background="Transparent"
+                                FontFamily="Baskerville Old Face"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="White"
+                                SelectedItem="{Binding SelectedTemplate}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:EventTrigger.Actions>
+                                            <i:InvokeCommandAction Command="{Binding TemplateChangeCommand}" />
+                                        </i:EventTrigger.Actions>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ListView>
+                        </DockPanel>
+                    </GroupBox>
+                    <DockPanel Grid.Column="1">
+                        <ComboBox
+                            Name="cb"
+                            Margin="20"
+                            DockPanel.Dock="Top"
+                            IsReadOnly="True"
+                            SelectedIndex="0"
+                            Style="{StaticResource MaterialDesignFilledComboBox}" />
+
+                        <UniformGrid
+                            materialDesign:RippleAssist.ClipToBounds="True"
+                            materialDesign:RippleAssist.RippleSizeMultiplier="0.2"
+                            Columns="2"
+                            DockPanel.Dock="Top">
+                            <UniformGrid.Resources>
+                                <Style BasedOn="{StaticResource MaterialDesignToolButton}" TargetType="{x:Type Button}">
+                                    <Setter Property="Margin" Value="3" />
+                                    <Setter Property="FontSize" Value="14" />
+                                    <Setter Property="Background" Value="#FF03192B" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="Padding" Value="3" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                </Style>
+                            </UniformGrid.Resources>
+                            <Button
+                                Click="Button_Click"
+                                Content="Add"
+                                Foreground="White" />
+                            <Button
+                                Click="Button_Click_1"
+                                Content="Remove"
+                                Foreground="Red" />
+                        </UniformGrid>
+                        <ListBox
+                            Name="lb"
+                            Margin="10"
+                            Background="#FFAEAEAE"
+                            BorderBrush="#FF879FE8"
+                            FontFamily="Arial Black"
+                            FontSize="16"
+                            Foreground="#FFFF5A0D" />
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem
+                Width="400"
+                Height="30"
+                HorizontalAlignment="Center"
+                Foreground="#DD07FFC7"
+                Header="{materialDesign:PackIcon Kind=UploadOutline,
+                                                 Size=30}">
+
+                <DockPanel>
+                    <Button
+                        Name="updCollBtn"
+                        Margin="5,5,50,5"
+                        Padding="36,0"
+                        HorizontalAlignment="Right"
+                        Click="UpdCollBtn_OnClick"
+                        Content="{materialDesign:PackIcon Update,
+                                                          25}"
+                        DockPanel.Dock="Bottom"
+                        Style="{StaticResource MaterialDesignFlatButton}" />
+                    <ListView
+                        Name="tempsLv"
+                        MinHeight="300"
+                        Margin="10"
+                        DockPanel.Dock="Top"
+                        SelectionChanged="OnTemplateChanged"
+                        SelectionMode="Extended">
+                        <ListView.InputBindings>
+                            <KeyBinding Key="A" Modifiers="Ctrl" />
+                        </ListView.InputBindings>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Click="OnNewClicked" Header="New" />
+                                <MenuItem Click="OnTemplateRemove" Header="Remove" />
+                                <MenuItem Command="ApplicationCommands.SelectAll" Header="Select All" />
+                            </ContextMenu>
+                        </ListView.ContextMenu>
+                    </ListView>
+
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+        <GridSplitter
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Height="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Panel.ZIndex="2"
+            Background="OrangeRed" />
+        <DockPanel
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+
+            <TextBlock
+                HorizontalAlignment="Center"
+                DockPanel.Dock="Top"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="Template Preview" />
+            <Button
+                Name="btn_startPrew"
+                Margin="5"
+                Padding="16,3"
+                HorizontalAlignment="center"
+                Click="Button_Click_2"
+                Content="Confirm Preview"
+                DockPanel.Dock="Bottom"
+                IsEnabled="False" />
+            <TextBox
+                Name="txb"
+                Padding="3"
+                Background="#555"
+                FontSize="18"
+                Foreground="White"
+                IsReadOnly="True"
+                TextChanged="Txb_OnTextChanged"
+                TextWrapping="Wrap" />
+        </DockPanel>
+
+    </Grid>
+</UserControl>

@@ -754,249 +754,256 @@
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </TabItem.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-                    <GroupBox
-                        Grid.Column="0"
-                        Margin="5"
-                        materialDesign:ColorZoneAssist.Background="#2c3e50"
-                        materialDesign:ColorZoneAssist.Foreground="White"
-                        materialDesign:ColorZoneAssist.Mode="Custom"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
-                        BorderThickness="2">
-                        <GroupBox.HeaderTemplate>
-                            <DataTemplate>
-                                <DockPanel>
+                <materialDesign:DialogHost
+                    CloseOnClickAway="True"
+                    DialogContent="{Binding DialogContent, UpdateSourceTrigger=PropertyChanged}"
+                    Identifier="rootHost"
+                    IsOpen="{Binding IsDialogOpen}"
+                    OverlayBackground="{StaticResource PrimaryHueDarkBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <GroupBox
+                            Grid.Column="0"
+                            Margin="5"
+                            materialDesign:ColorZoneAssist.Background="#2c3e50"
+                            materialDesign:ColorZoneAssist.Foreground="White"
+                            materialDesign:ColorZoneAssist.Mode="Custom"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                            BorderThickness="2">
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <DockPanel>
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Top"
+                                            FontSize="16"
+                                            Text="{Binding Path=[lang.Account], Source={StaticResource langHelper}}" />
+                                        <TextBox
+                                            Width="auto"
+                                            Margin="2,5"
+                                            materialDesign:HintAssist.Background="#2c3e50"
+                                            materialDesign:HintAssist.Hint="{Binding Path=[lang.Search], Source={StaticResource langHelper}}"
+                                            materialDesign:TextFieldAssist.HasClearButton="True"
+                                            materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                                            materialDesign:TextFieldAssist.LeadingIcon="Search"
+                                            FontSize="12"
+                                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                            Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SearchAccount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                            <ListBox
+                                x:Name="acLB"
+                                DisplayMemberPath="UserName"
+                                ItemsSource="{Binding AccountCollection}"
+                                SelectedItem="{Binding SelectedAccount}"
+                                SelectionMode="Extended">
+                                <b:Interaction.Triggers>
+                                    <b:EventTrigger EventName="SelectionChanged">
+                                        <b:EventTrigger.Actions>
+                                            <b:InvokeCommandAction Command="{Binding AccountMultipleSelectedCommand}" CommandParameter="{Binding ElementName=acLB, Path=SelectedItems}" />
+                                        </b:EventTrigger.Actions>
+                                    </b:EventTrigger>
+                                </b:Interaction.Triggers>
+                            </ListBox>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Column="1"
+                            Margin="5"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            materialDesign:ColorZoneAssist.Background="#30336b"
+                            materialDesign:ColorZoneAssist.Foreground="#eb4d4b"
+                            materialDesign:ColorZoneAssist.Mode="Custom"
+                            DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, Path=DataContext.SelectedAccount}"
+                            Header="{Binding MemberId, StringFormat=Member Id:{0}}"
+                            Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, Path=DataContext.ShowAccountInfo}">
+                            <DockPanel>
+                                <Image
+                                    Width="250"
+                                    Height="250"
+                                    HorizontalAlignment="Center"
+                                    DockPanel.Dock="Top"
+                                    Source="C:\Study\School\JecPizza\JecPizza\Content\Images\GCGP.jpg" />
+                                <Separator
+                                    Width="auto"
+                                    Height="2"
+                                    Margin="10"
+                                    DockPanel.Dock="Top" />
+
+                                <UniformGrid
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Columns="2"
+                                    DockPanel.Dock="Bottom">
+                                    <Button
+                                        Margin="50,10"
+                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SendEmailCommand}"
+                                        Content="{materialDesign:PackIcon Email,
+                                                                          Size=30}"
+                                        Foreground="Aquamarine"
+                                        Style="{StaticResource MaterialDesignToolButton}" />
+                                    <Button
+                                        Margin="50,10"
+                                        Content="{materialDesign:PackIcon Delete,
+                                                                          Size=30}"
+                                        Foreground="Red"
+                                        Style="{StaticResource MaterialDesignToolButton}" />
+                                </UniformGrid>
+
+                                <UniformGrid
+                                    Height="auto"
+                                    Columns="2"
+                                    DockPanel.Dock="Top"
+                                    Rows="8">
+
                                     <TextBlock
-                                        HorizontalAlignment="Center"
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
-                                        DockPanel.Dock="Top"
-                                        FontSize="16"
-                                        Text="{Binding Path=[lang.Account], Source={StaticResource langHelper}}" />
-                                    <TextBox
-                                        Width="auto"
-                                        Margin="2,5"
-                                        materialDesign:HintAssist.Background="#2c3e50"
-                                        materialDesign:HintAssist.Hint="{Binding Path=[lang.Search], Source={StaticResource langHelper}}"
-                                        materialDesign:TextFieldAssist.HasClearButton="True"
-                                        materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                                        materialDesign:TextFieldAssist.LeadingIcon="Search"
-                                        FontSize="12"
-                                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                        Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SearchAccount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                                </DockPanel>
-                            </DataTemplate>
-                        </GroupBox.HeaderTemplate>
-                        <ListBox
-                            x:Name="acLB"
-                            DisplayMemberPath="UserName"
-                            ItemsSource="{Binding AccountCollection}"
-                            SelectedItem="{Binding SelectedAccount}"
-                            SelectionMode="Extended">
-                            <b:Interaction.Triggers>
-                                <b:EventTrigger EventName="SelectionChanged">
-                                    <b:EventTrigger.Actions>
-                                        <b:InvokeCommandAction Command="{Binding AccountMultipleSelectedCommand}" CommandParameter="{Binding ElementName=acLB, Path=SelectedItems}" />
-                                    </b:EventTrigger.Actions>
-                                </b:EventTrigger>
-                            </b:Interaction.Triggers>
-                        </ListBox>
-                    </GroupBox>
-                    <GroupBox
-                        Grid.Column="1"
-                        Margin="5"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        materialDesign:ColorZoneAssist.Background="#30336b"
-                        materialDesign:ColorZoneAssist.Foreground="#eb4d4b"
-                        materialDesign:ColorZoneAssist.Mode="Custom"
-                        DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, Path=DataContext.SelectedAccount}"
-                        Header="{Binding MemberId, StringFormat=Member Id:{0}}"
-                        Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}, Path=DataContext.ShowAccountInfo}">
-                        <DockPanel>
-                            <Image
-                                Width="250"
-                                Height="250"
-                                HorizontalAlignment="Center"
-                                DockPanel.Dock="Top"
-                                Source="C:\Study\School\JecPizza\JecPizza\Content\Images\GCGP.jpg" />
-                            <Separator
-                                Width="auto"
-                                Height="2"
-                                Margin="10"
-                                DockPanel.Dock="Top" />
+                                        FontSize="20"
+                                        Text="NAME :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding UserName}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="NICKNAME :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding NickName}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="ADDRESS :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding Address}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="PHONE NUMBER :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding PhoneNumber}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="EMAIL :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding Email}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="DOB :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding Dob}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="SEX :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding Sex}"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="REGISTERED DATE :"
+                                        TextAlignment="Center" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="22"
+                                        Text="{Binding RegisterDate}"
+                                        TextAlignment="Center" />
 
-                            <UniformGrid
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Columns="2"
-                                DockPanel.Dock="Bottom">
-                                <Button
-                                    Margin="50,10"
-                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SendEmailCommand}"
-                                    Content="{materialDesign:PackIcon Email,
-                                                                      Size=30}"
-                                    Foreground="Aquamarine"
-                                    Style="{StaticResource MaterialDesignToolButton}" />
-                                <Button
-                                    Margin="50,10"
-                                    Content="{materialDesign:PackIcon Delete,
-                                                                      Size=30}"
-                                    Foreground="Red"
-                                    Style="{StaticResource MaterialDesignToolButton}" />
-                            </UniformGrid>
+                                </UniformGrid>
 
-                            <UniformGrid
-                                Height="auto"
-                                Columns="2"
-                                DockPanel.Dock="Top"
-                                Rows="8">
-
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="NAME :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding UserName}"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="NICKNAME :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding NickName}"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="ADDRESS :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding Address}"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="PHONE NUMBER :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding PhoneNumber}"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="EMAIL :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding Email}"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="DOB :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding Dob}"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="SEX :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding Sex}"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="20"
-                                    Text="REGISTERED DATE :"
-                                    TextAlignment="Center" />
-                                <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    FontSize="22"
-                                    Text="{Binding RegisterDate}"
-                                    TextAlignment="Center" />
-
-                            </UniformGrid>
-
-                        </DockPanel>
-                    </GroupBox>
-                    <DataGrid
-                        Grid.Column="1"
-                        Margin="10"
-                        AlternatingRowBackground="#999"
-                        GridLinesVisibility="Vertical"
-                        IsReadOnly="True"
-                        ItemsSource="{Binding SelectedAccounts}"
-                        Visibility="{Binding ShowMultiplyAccountInfo}" />
-                </Grid>
+                            </DockPanel>
+                        </GroupBox>
+                        <DataGrid
+                            Grid.Column="1"
+                            Margin="10"
+                            AlternatingRowBackground="#999"
+                            GridLinesVisibility="Vertical"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding SelectedAccounts}"
+                            Visibility="{Binding ShowMultiplyAccountInfo}" />
+                    </Grid>
+                </materialDesign:DialogHost>
             </TabItem>
         </TabControl>
 

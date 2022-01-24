@@ -595,10 +595,17 @@ namespace JecPizza.ViewModels
             }
         }
 
-        private async void OnSendEmail(object p)
+        private void OnSendEmail(object p)
         {
 
-            Process.Start(@"C:\Study\School\JecPizza\JecPizzaTestUI\bin\Debug\netcoreapp3.1\JecPizzaTestUI.exe");
+            IsDialogOpen = true;
+
+            EmailTemplateDialog etd = new EmailTemplateDialog()
+            {
+                DataContext = new EmailDialogTempVM(this)
+            };
+
+            DialogContent = etd;
 
             //MailAddress fromAddress = new MailAddress("jecPizza@gmail.com", "JecPizza");
             //MailAddress toAddress = new MailAddress("20jn0102@jec.ac.jp", SelectedAccount.UserName);
