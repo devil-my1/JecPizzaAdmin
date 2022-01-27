@@ -1038,6 +1038,7 @@
                             FontStretch="UltraCondensed"
                             FontStyle="Normal"
                             FontWeight="DemiBold"
+                            Foreground="#123"
                             Text="{Binding Source={StaticResource OverlayService}, Path=Text}"
                             TextAlignment="Center"
                             TextTrimming="CharacterEllipsis"

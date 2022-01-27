@@ -607,31 +607,8 @@ namespace JecPizza.ViewModels
 
             DialogContent = etd;
 
-            //MailAddress fromAddress = new MailAddress("jecPizza@gmail.com", "JecPizza");
-            //MailAddress toAddress = new MailAddress("20jn0102@jec.ac.jp", SelectedAccount.UserName);
-            //const string fromPassword = "wvlffbfobhqbdsxi";
-            //string subject = "Test ";
-            //string body = $"Mr {SelectedAccount.UserName}, Jec Pizza is opened!";
-
-            //SmtpClient smtp = new SmtpClient
-            //{
-            //    Host = "smtp.gmail.com",
-            //    Port = 587,
-            //    EnableSsl = true,
-            //    DeliveryMethod = SmtpDeliveryMethod.Network,
-            //    UseDefaultCredentials = false,
-            //    Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
-            //    Timeout = 20000
-            //};
-            //smtp.SendCompleted += (sender, args) => Xceed.Wpf.Toolkit.MessageBox.Show(IntPtr.Zero, "Email successfully sent!");
-            //using var message = new MailMessage(fromAddress, toAddress)
-            //{
-            //    Subject = subject,
-            //    Body = body
-            //};
-            //await smtp.SendMailAsync(message);
-
         }
+
         private async void GoodsServiceSendEmailWhenAddGoods(Goods g)
         {
             MailAddress fromAddress = new MailAddress("jecPizza@gmail.com", "JecPizza");
@@ -658,7 +635,6 @@ namespace JecPizza.ViewModels
             };
             await smtp.SendMailAsync(message);
         }
-
 
         private void OnEditGoods(object p)
         {

@@ -26,6 +26,9 @@
 		<Reference Include="LocalizatorHelper">
 			<HintPath>bin\Debug\netcoreapp3.1\LocalizatorHelper.dll</HintPath>
 		</Reference>
+		<Reference Include="Microsoft.Maps.MapControl.WPF">
+		  <HintPath>bin\Debug\netcoreapp3.1\Microsoft.Maps.MapControl.WPF.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
