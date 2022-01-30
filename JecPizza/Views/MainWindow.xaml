@@ -175,47 +175,58 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
 
-
-                        <wpf:Gauge
+                        <materialDesign:Card
                             Grid.Row="0"
                             Grid.Column="1"
-                            Foreground="IndianRed"
-                            FromColor="DarkRed"
-                            HighFontSize="20"
-                            InnerRadius="110"
-                            LabelFormatter="{Binding Label}"
-                            ToColor="GreenYellow"
-                            Uses360Mode="True"
-                            Value="{Binding TodaysTotalSales}"
-                            From="0"
-                            To="100">
-                            <wpf:Gauge.GaugeRenderTransform>
-                                <TransformGroup>
-                                    <RotateTransform Angle="90" />
-                                    <ScaleTransform ScaleX="1" />
-                                </TransformGroup>
-                            </wpf:Gauge.GaugeRenderTransform>
-                        </wpf:Gauge>
+                            Margin="5"
+                            Padding="10"
+                            materialDesign:ShadowAssist.Darken="True"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            <wpf:Gauge
+                                Foreground="IndianRed"
+                                FromColor="DarkRed"
+                                HighFontSize="20"
+                                InnerRadius="110"
+                                LabelFormatter="{Binding Label}"
+                                ToColor="GreenYellow"
+                                Uses360Mode="True"
+                                Value="{Binding TodaysTotalSales}"
+                                From="0"
+                                To="100">
+                                <wpf:Gauge.GaugeRenderTransform>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="90" />
+                                        <ScaleTransform ScaleX="1" />
+                                    </TransformGroup>
+                                </wpf:Gauge.GaugeRenderTransform>
+                            </wpf:Gauge>
+                        </materialDesign:Card>
+
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
+                            Panel.ZIndex="1"
                             FontFamily="Bahnschrift"
                             FontSize="22"
                             Text="{Binding Source={StaticResource langHelper}, Path=[lang.TBI]}" />
 
-
-                        <wpf:PieChart
+                        <materialDesign:Card
                             Grid.Row="0"
                             Grid.Column="0"
-                            DataTooltip="{x:Null}"
-                            FontSize="18"
-                            Hoverable="True"
-                            LegendLocation="Right"
-                            Series="{Binding GoodsGroupSeries}" />
-
+                            Margin="5"
+                            Padding="10"
+                            materialDesign:ShadowAssist.Darken="True"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                            <wpf:PieChart
+                                DataTooltip="{x:Null}"
+                                FontSize="18"
+                                Hoverable="True"
+                                LegendLocation="Right"
+                                Series="{Binding GoodsGroupSeries}" />
+                        </materialDesign:Card>
                         <Grid
                             Grid.Row="1"
                             Grid.Column="0"
@@ -249,7 +260,10 @@
                                     </b:Interaction.Triggers>
                                 </ComboBox>
                             </StackPanel>
-                            <wpf:CartesianChart Grid.Row="1" DataClickCommand="{Binding ColumnClickedCommand}">
+                            <wpf:CartesianChart
+                                Grid.Row="1"
+                                DataClickCommand="{Binding ColumnClickedCommand}"
+                                ScrollMode="XY">
                                 <wpf:CartesianChart.Series>
                                     <wpf:ColumnSeries
                                         Title="{Binding Source={StaticResource langHelper}, Path=[lang.Sales]}"
@@ -717,11 +731,11 @@
                     OverlayBackground="{StaticResource PrimaryHueDarkBrush}">
                     <materialDesign:DialogHost.ContextMenu>
                         <ContextMenu Width="180" VerticalContentAlignment="Center">
-                            <MenuItem Header="Info" />
+                            <MenuItem Command="{Binding DeliveryInfoCommand}" Header="Info" />
                         </ContextMenu>
                     </materialDesign:DialogHost.ContextMenu>
 
-                    <ListView ItemsSource="{Binding DeliveryCollection}">
+                    <ListView ItemsSource="{Binding DeliveryCollection}" SelectedItem="{Binding SelectedDelivery}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">

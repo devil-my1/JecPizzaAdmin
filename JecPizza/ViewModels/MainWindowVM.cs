@@ -358,6 +358,16 @@ namespace JecPizza.ViewModels
 
         #endregion
 
+        #region SelecteDelivery : Delivery - Selected Delevery
+
+        /// <summary>Selected Delevery</summary>
+        private Delivery _SelectedDelivery;
+
+        /// <summary>Selected Delevery</summary>
+        public Delivery SelectedDelivery { get => _SelectedDelivery; set => Set(ref _SelectedDelivery, value); }
+
+        #endregion
+
         #endregion
 
 
@@ -381,6 +391,7 @@ namespace JecPizza.ViewModels
         public ICommand LoadProductsCommand { get; set; }
         public ICommand GoodsCsvReaderCommand { get; set; }
         public ICommand SendEmailCommand { get; set; }
+        public ICommand DeliveryInfoCommand { get; set; }
 
         #endregion
 
@@ -509,16 +520,24 @@ namespace JecPizza.ViewModels
 
             SendEmailCommand = new RellayCommand(OnSendEmail, p => SelectedAccount != null);
 
+            DeliveryInfoCommand = new RellayCommand(OnInfoClicked, p => SelectedDelivery != null);
+
             #endregion
         }
 
 
 
-
-
-
         #region Handlers
 
+        private void OnInfoClicked(object Obj)
+        {
+            IsDialogOpen = true;
+            var delInfo = new DeliveryInfoDialog()
+            {
+                DataContext = new DeleveryInfoVM(SelectedDelivery)
+            };
+            DialogContent = delInfo;
+        }
 
         private async void OnGoodsFromCSV(object Obj)
         {

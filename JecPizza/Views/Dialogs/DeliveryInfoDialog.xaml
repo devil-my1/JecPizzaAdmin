@@ -8,28 +8,104 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:wpf="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    Width="800"
+    Height="400"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <wpf:Map
-            Name="Map"
-            Grid.Row="0"
-            AnimationLevel="Full"
-            BorderBrush="Aquamarine"
-            Center="{Binding Location, UpdateSourceTrigger=PropertyChanged}"
-            CredentialsProvider="bkJ3LrGbujDGZtEFBHQJ~Gv-1yMhHNgsYtdfeB5OI7A~AjeIKUCm8Ztd5txpINGco68mkXHlxkhTazrdFGHfSPHNiew66iuOFjyh6oqz7t32"
-            Culture="ja-JP"
-            Mode="AerialWithLabels"
-            Tag="{Binding ElementName=Chart}"
-            ZoomLevel="5" />
-        <TextBox
-            Name="tb"
+        <DockPanel Grid.Row="0">
+            <md:Card DockPanel.Dock="Bottom">
+                <UniformGrid Columns="2" Rows="2">
+                    <TextBlock
+                        FontSize="18"
+                        Foreground="OrangeRed"
+                        Text="{Binding Distance, StringFormat=Distance : {0}}" />
+                    <TextBlock
+                        FontSize="18"
+                        Foreground="OrangeRed"
+                        Text="{Binding Time, StringFormat=Time : {0}}" />
+                    <TextBlock
+                        FontSize="18"
+                        Foreground="OrangeRed"
+                        Text="{Binding ArrivalTime, StringFormat=ArrivalTime : {0}}" />
+                    <TextBlock
+                        FontSize="18"
+                        Foreground="OrangeRed"
+                        Text="{Binding SelectedDelivery.Address, StringFormat=CustomerLocation : {0}}" />
+                </UniformGrid>
+            </md:Card>
+            <wpf:Map
+                AnimationLevel="Full"
+                Center="{Binding ShopLocation, UpdateSourceTrigger=PropertyChanged, TargetNullValue=noDate}"
+                CredentialsProvider="bkJ3LrGbujDGZtEFBHQJ~Gv-1yMhHNgsYtdfeB5OI7A~AjeIKUCm8Ztd5txpINGco68mkXHlxkhTazrdFGHfSPHNiew66iuOFjyh6oqz7t32"
+                Culture="ja-Jp"
+                UseInertia="True"
+                ZoomLevel="18">
+                <wpf:Pushpin Location="{Binding CustomerLocation, UpdateSourceTrigger=PropertyChanged, TargetNullValue=NoDataLoaded}">
+                    <wpf:Pushpin.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#FFFF4600" />
+                            <GradientStop Offset="1" Color="#FFFFC500" />
+                        </LinearGradientBrush>
+                    </wpf:Pushpin.Background>
+                </wpf:Pushpin>
+                <wpf:Pushpin Location="{Binding ShopLocation, UpdateSourceTrigger=PropertyChanged, TargetNullValue=NoDataLoaded}">
+                    <wpf:Pushpin.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#FF322D2A" />
+                            <GradientStop Offset="1" Color="#FF00FF46" />
+                        </LinearGradientBrush>
+                    </wpf:Pushpin.Background>
+                </wpf:Pushpin>
+                <wpf:MapPolygon
+                    FillRule="Nonzero"
+                    Locations="{Binding PolylinePoints, TargetNullValue=noDate}"
+                    Opacity="0.7"
+                    Stroke="Green"
+                    StrokeDashCap="Round"
+                    StrokeDashOffset="4"
+                    StrokeEndLineCap="Round"
+                    StrokeLineJoin="Round"
+                    StrokeMiterLimit="55"
+                    StrokeStartLineCap="Round"
+                    StrokeThickness="5" />
+            </wpf:Map>
+        </DockPanel>
+
+        <GridSplitter
             Grid.Row="1"
-            Text="新宿" />
+            Height="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Background="OrangeRed" />
+
+        <DockPanel Grid.Row="2" LastChildFill="True">
+            <UniformGrid
+                HorizontalAlignment="Right"
+                md:RippleAssist.RippleSizeMultiplier="0.3"
+                Columns="2"
+                DockPanel.Dock="Bottom">
+                <Button
+                    Content="OK"
+                    FontSize="15"
+                    Foreground="#fff"
+                    Style="{StaticResource MaterialDesignToolButton}" />
+                <Button
+                    Content="Close"
+                    FontSize="15"
+                    Foreground="#fff"
+                    Style="{StaticResource MaterialDesignToolButton}" />
+            </UniformGrid>
+            <DataGrid
+                AreRowDetailsFrozen="True"
+                AutoGenerateColumns="False"
+                DockPanel.Dock="Top"
+                GridLinesVisibility="None"
+                IsReadOnly="True" />
+        </DockPanel>
     </Grid>
 </UserControl>
